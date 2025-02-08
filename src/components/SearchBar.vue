@@ -65,20 +65,3 @@ const handleBlur = () => {
   isFocused.value = false;
 };
 </script>
-
-<style scoped>
-.search-wrapper {
-  width: 100%;
-  max-width: 500px;
-}
-
-.search-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.is-focused {
-  box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-}
-</style>

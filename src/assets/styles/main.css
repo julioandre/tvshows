@@ -1,0 +1,120 @@
+@import "./variables.css";
+
+/* Mobile-First Base Styles */
+.search-wrapper {
+    width: 100%;
+    max-width: var(--container-max-width);
+    padding: 0 var(--container-padding-mobile);
+    margin: 0 auto;
+}
+
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input {
+    width: 100%;
+    height: var(--input-height-mobile);
+    padding: var(--input-padding-mobile);
+    border: var(--border-width-normal) solid var(--color-border);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+    outline: none;
+    transition: all var(--transition-quick);
+}
+.search-input.is-error {
+    border-color: #dc3545;
+}
+.search-input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+.clear-button {
+    position: absolute;
+    right: var(--spacing-sm);
+    height: var(--input-height-mobile);
+    width: var(--input-height-mobile);
+    font-size: var(--font-size-lg);
+    padding: var(--spacing-2xs);
+    background: none;
+    border: none;
+    color: var(--color-text-light);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.error-message {
+    font-size: var(--font-size-2xs);
+    margin-top: var(--spacing-xs);
+    color: var(--color-error);
+}
+.is-focused {
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+/* Tablet and Desktop Styles */
+@media (min-width: 576px) {
+    .search-wrapper {
+        padding: 0 var(--container-padding-desktop);
+    }
+
+    .search-input {
+        height: var(--input-height-desktop);
+        padding: var(--input-padding-desktop);
+        font-size: var(--font-size-md);
+    }
+
+    .clear-button {
+        height: var(--input-height-desktop);
+        width: var(--input-height-desktop);
+        font-size: var(--font-size-xl);
+        padding: var(--spacing-xs);
+    }
+
+    .error-message {
+        font-size: var(--font-size-xs);
+        margin-top: var(--spacing-sm);
+        color: var(--color-error);
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) {
+    .search-input {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .clear-button {
+        min-height: 44px; /* Minimum touch target size */
+        min-width: 44px;
+        color: #333;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --color-background: #1a1a1a;
+        --color-text: #ffffff;
+        --color-text-light: #cccccc;
+        --color-border: #404040;
+        --color-primary: #6ba7e8;
+        --shadow-focus: 0 0 0 3px rgba(107, 167, 232, 0.2);
+    }
+}
+
+/* High Contrast Mode */
+@media (forced-colors: active) {
+    .search-input {
+        border: var(--border-width-normal) solid ButtonBorder;
+    }
+
+    .search-input:focus {
+        outline: 2px solid ButtonText;
+    }
+}
