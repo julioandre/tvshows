@@ -1,6 +1,43 @@
 <script setup lang="ts">
+import { ref } from "vue";
 import SearchBar from "./components/SearchBar.vue";
+import Sidebar from "./components/Sidebar.vue";
 
+import type { MenuItem } from "./utils/types/sidebar";
+
+const sidebarExpanded = ref(true);
+
+const menuItems: MenuItem[] = [
+  {
+    id: 1,
+    label: "Dashboard",
+    icon: "📊",
+    route: "/",
+  },
+  {
+    id: 2,
+    label: "Users",
+    icon: "👥",
+    children: [
+      {
+        id: 21,
+        label: "User List",
+        route: "/users",
+      },
+      {
+        id: 22,
+        label: "Add User",
+        route: "/users/add",
+      },
+    ],
+  },
+  {
+    id: 3,
+    label: "Settings",
+    icon: "⚙️",
+    route: "/settings",
+  },
+];
 const handleSearch = (query: string) => {
   console.log("Searching for:", query);
   // Implement your search logic here
@@ -14,77 +51,6 @@ const handleClear = () => {
 
 <template>
   <div class="app">
-    <SearchBar
-      placeholder="Search items..."
-      :minLength="3"
-      :debounceTime="500"
-      @search="handleSearch"
-      @clear="handleClear"
-    />
+    <Sidebar />
   </div>
-  <h1>Hello World</h1>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>

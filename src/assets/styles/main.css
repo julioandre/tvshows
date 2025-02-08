@@ -26,7 +26,7 @@
     transition: all var(--transition-quick);
 }
 .search-input.is-error {
-    border-color: #dc3545;
+    border-color: var(--color-error);
 }
 .search-input:focus {
     border-color: #4a90e2;
@@ -81,6 +81,10 @@
         margin-top: var(--spacing-sm);
         color: var(--color-error);
     }
+}
+
+/* Full sidebar on mobile */
+@media (max-width: 768px) {
 }
 
 /* Touch Device Optimizations */
