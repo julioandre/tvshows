@@ -113,6 +113,47 @@
 .is-focused {
     box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
 }
+.movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.movie-item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    width: 45%;
+    transition: transform 0.3s;
+}
+
+.movie-item:hover {
+    transform: scale(1.05); /* Scale up the item on hover */
+}
+
+.movie-thumbnail {
+    width: 50px; /* Thumbnail size */
+    height: 50px; /* Standard height */
+    border-radius: 4px; /* Slightly round corners */
+    margin-right: 10px; /* Space between the image and details */
+}
+.movie-details {
+    flex: 1; /* Allow details to take remaining space */
+}
+
+.movie-title {
+    font-size: 1.2rem; /* Slightly larger font size for title */
+    font-weight: bold; /* Bold title text */
+    display: block; /* Make title a block to stack on summary */
+}
+
+.movie-summary {
+    margin-top: 5px; /* Space between title and summary */
+    font-size: 0.9rem; /* Standard font size for summary */
+    color: gray; /* Optional: style the summary text */
+}
 
 /* Tablet and Desktop Styles */
 @media (min-width: 576px) {
