@@ -47,6 +47,63 @@
     align-items: center;
     justify-content: center;
 }
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 250px; /* Expanded width */
+    background: #f8f9fa;
+    border-right: 1px solid #dee2e6;
+    transition: transform 0.3s ease;
+    transform: translateX(0); /* Collapsed style */
+    z-index: 1000;
+}
+
+.sidebar.collapsed {
+    transform: translateX(-80%); /* Show the sidebar */
+}
+
+.sidebar-header {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.sidebar-title {
+    margin: 0;
+    font-size: 20px;
+}
+
+.toggle-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.sidebar-links {
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-link {
+    display: block;
+    padding: 12px;
+    color: #333;
+    text-decoration: none;
+}
+
+.sidebar-link:hover,
+.sidebar-link.active {
+    background: #e9ecef; /* Highlight for active/hover state */
+}
+
+.content {
+    flex: 1; /* Makes it take the remaining space */
+    transition: margin-left 0.3s ease; /* Smooth transition for margin */
+    margin-left: var(--sidebar-collapsed-width); /* Space for collapsed sidebar */
+}
 
 .error-message {
     font-size: var(--font-size-2xs);
@@ -61,6 +118,11 @@
 @media (min-width: 576px) {
     .search-wrapper {
         padding: 0 var(--container-padding-desktop);
+    }
+    .content {
+        flex: 1; /* Makes it take the remaining space */
+        transition: margin-left 0.3s ease; /* Smooth transition for margin */
+        margin-left: 250px; /* Space for collapsed sidebar */
     }
 
     .search-input {
@@ -82,11 +144,17 @@
         color: var(--color-error);
     }
 }
-
-/* Full sidebar on mobile */
 @media (max-width: 768px) {
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 999;
+    }
 }
-
 /* Touch Device Optimizations */
 @media (hover: none) {
     .search-input {
@@ -120,5 +188,16 @@
 
     .search-input:focus {
         outline: 2px solid ButtonText;
+    }
+}
+@media (min-width: 769px) {
+    .sidebar {
+        width: var(--sidebar-width); /* Full width for desktop */
+        transform: none; /* No transform on desktop */
+    }
+
+    .sidebar.collapsed {
+        transform: none; /* Prevent collapsing on desktop */
+        width: var(--sidebar-width); /* Still show full width */
     }
 }
