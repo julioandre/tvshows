@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar" :class="{ collapsed: !!isExpanded }">
+  <aside class="sidebar" :class="{ collapsed: !isExpanded }">
     <div class="sidebar-header">
       <h2 class="sidebar-title">My Sidebar</h2>
       <button v-if="isMobile" class="toggle-button" @click="toggleSidebar">
