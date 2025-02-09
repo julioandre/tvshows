@@ -5,8 +5,10 @@ import SearchBar from "./components/SearchBar.vue";
 import Sidebar from "./components/Sidebar.vue";
 
 const selectedGenre = ref<string | null>(null);
+const searchQuery = ref("");
 const handleSearch = (query: string) => {
   console.log("Searching for:", query);
+  searchQuery.value = query;
   // Implement your search logic here
 };
 
@@ -83,12 +85,16 @@ const items = ref([
   },
 ]);
 const filterByGenre = (genre: string) => {
-  selectedGenre.value = genre === "0" ? null : genre; // Set selected genre; "0" represents "All"
+  selectedGenre.value = genre === "Home" ? null : genre; // Set selected genre; "0" represents "All"
 };
 const filteredMovies = computed(() => {
-  return selectedGenre.value
-    ? items.value.filter((movie) => movie.genres.includes(selectedGenre.value!))
-    : items.value; // Return all movies if no genre is selected
+  return items.value.filter((movie) => {
+    const matchesGenre = selectedGenre.value
+      ? movie.genres.includes(selectedGenre.value)
+      : items.value;
+    const matchesSearch = movie.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+    return matchesGenre && matchesSearch; // Return movie if it matches genre and search
+  });
 });
 </script>
 
@@ -98,7 +104,7 @@ const filteredMovies = computed(() => {
     <div class="content">
       <SearchBar
         placeholder="Search products..."
-        :minLength="3"
+        :minLength="0"
         :debounceTime="500"
         @search="handleSearch"
         @clear="handleClear"
