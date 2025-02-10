@@ -1,5 +1,4 @@
 <template>
-  <h1>Movie List</h1>
   <div class="dropdown-wrapper"><RatingFilter @update="setRating" /></div>
   <div class="movie-list">
     <div class="movie-item" v-for="item in filteredMovies" :key="item.id" @click="openModal(item)">
@@ -27,7 +26,7 @@ const props = defineProps<{
   items: MovieItem[];
 }>();
 const isModalVisible = ref(false);
-const selectedMovie = ref<MovieItem | null>(null);
+const selectedMovie = ref<MovieItem>();
 
 const filteredMovies = computed(() => {
   return props.items.filter((movie) => movie.rating >= selectedRating.value);
@@ -45,7 +44,7 @@ const setRating = (rating: number) => {
 
 // Function to close the modal
 const closeModal = () => {
-  selectedMovie.value = null;
+  selectedMovie.value = undefined;
   isModalVisible.value = false;
 };
 </script>

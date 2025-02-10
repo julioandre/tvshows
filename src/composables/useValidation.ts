@@ -11,7 +11,6 @@ export function useValidation(value: string, minLength: number = 0) {
 
     return {
       isValid: true,
-      errorMessage: "",
     };
   };
 

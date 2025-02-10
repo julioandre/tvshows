@@ -6,5 +6,5 @@ export interface SearchProps {
 
 export interface ValidationResult {
   isValid: boolean;
-  errorMessage: string;
+  errorMessage?: string;
 }

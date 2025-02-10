@@ -24,17 +24,19 @@
 
 <script setup lang="ts">
 import { ref } from "vue";
-import { useRoute } from "vue-router";
 import { useBreakpoint } from "../composables/useBreakpoints";
 
 const emit = defineEmits<{
   (e: "filter", genre: string): void;
 }>();
+
 const selectGenre = (genre: string) => {
   setCurrentLink(genre);
   emit("filter", genre); // Emit the selected genre
 };
+
 const { isMobile } = useBreakpoint();
+
 interface Link {
   name: string;
   path: string;
@@ -58,7 +60,7 @@ const links: Link[] = [
   { name: "Fantasy", icon: "🏰", path: "/fantasy" },
 ];
 
-const isExpanded = isMobile ? ref(false) : ref(true);
+const isExpanded = isMobile ? ref<boolean>(false) : ref<boolean>(true);
 const currentLink = ref<string>(links[0].name);
 
 const toggleSidebar = () => {
@@ -67,56 +69,9 @@ const toggleSidebar = () => {
 
 const setCurrentLink = (name: string) => {
   currentLink.value = name;
-  // Close sidebar when a link is clicked (optional)
-  if (window.innerWidth < 769) {
+  // Close sidebar when a link is clicked
+  if (isMobile) {
     isExpanded.value = false;
   }
 };
-// const getIcon = (genre: string) => {
-//   // Return an icon based on genre (you can customize this)
-//   switch (genre) {
-//     case "Action":
-//       return "🏃‍♂️"; // Example emoji for Action
-//     case "Drama":
-//       return "🎭"; // Example emoji for Drama
-//     case "Comedy":
-//       return "😂"; // Example emoji for Comedy
-//     case "Crime":
-//       return "🚓"; // Example emoji for Crime
-//     case "Horror":
-//       return "👻";
-//     case "Family":
-//       return "👨‍👩‍👧‍👦";
-//     case "Science-Fiction":
-//       return "👽";
-//     case "Western":
-//       return "🤠";
-//     case "Sports":
-//       return "⚽";
-//     case "Music":
-//       return "♫";
-//     case "History":
-//       return "🏛️";
-//     case "Adventure":
-//       return "🗺️";
-//     case "War":
-//       return "🪖";
-//     case "Fantasy":
-//       return "🏰";
-//     case "Romance":
-//       return "🌹";
-//     case "Mystery":
-//       return "🕵️‍♂️";
-//     case "Thriller":
-//       return "😱";
-
-//     // Add more genres and icons as needed
-//     default:
-//       return "🎬"; // Default icon for unknown genres
-//   }
-// };
-
-// Sync the current link with Vue Router
-const route = useRoute();
-currentLink.value = route.name as string;
 </script>

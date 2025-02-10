@@ -26,32 +26,3 @@ defineEmits<{
   (e: "close"): void;
 }>();
 </script>
-
-<style scoped>
-.modal {
-  position: fixed;
-  top: 0;
-  right: 0;
-  width: 400px;
-  height: 100vh;
-  background: white;
-  box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
-  z-index: 1000;
-  transition: transform 0.3s ease;
-}
-
-.modal-content {
-  padding: 20px;
-}
-
-.close {
-  cursor: pointer;
-  font-size: 24px;
-  float: right;
-}
-
-.movie-image {
-  max-width: 100%;
-  border-radius: 5px;
-}
-</style>

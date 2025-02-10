@@ -10,7 +10,7 @@
       />
       <ClearButton v-if="searchQuery" @clear="clearSearch" />
     </div>
-    <ErrorMessage :message="errorMessage" />
+    <ErrorMessage v-if="errorMessage" :message="errorMessage" />
   </div>
 </template>
 
@@ -35,8 +35,8 @@ const emit = defineEmits<{
 }>();
 
 const searchQuery = ref("");
-const isFocused = ref(false);
-const errorMessage = ref("");
+const isFocused = ref<boolean>(false);
+const errorMessage = ref<string>();
 
 const { debounce } = useDebounce(props.debounceTime);
 
