@@ -25,7 +25,6 @@ const selectedRating = ref<'asc'|'desc'>('asc');
 
 // Emit the selected rating when it changes
 const emitSortingChange = () => {
-  console.log("I am here");
   emit("update", selectedRating.value);
 };
 </script>
