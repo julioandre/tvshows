@@ -35,7 +35,7 @@ const getTruncatedSummary = (summary: string): string => {
   if (summary.length <= 200) {
     return summary; // Return full summary if it's 300 characters or less
   }
-  return summary.substring(0, 200) + "..."; // Truncate to 300 characters and add ellipsis
+  return summary.substring(0, 200) + "...";
 };
 
 // Function to close the modal

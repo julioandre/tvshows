@@ -57,7 +57,7 @@
     border-right: 1px solid #dee2e6;
     transition: transform 0.3s ease;
     transform: translateX(0); /* Collapsed style */
-    z-index: 900;
+    z-index: 1000;
 }
 
 .sidebar.collapsed {
@@ -132,7 +132,6 @@
 
 .movie-item:hover {
     transform: scale(1.05);
-    z-index: 1000; /* Scale up the item on hover */
 }
 .dropdown-wrapper {
     position: relative; /* Now dropdowns are positioned within this context */
@@ -260,6 +259,7 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         padding: 10px;
+        margin-left: 2.2%;
         width: 45%;
         transition: transform 0.3s;
     }
