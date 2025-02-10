@@ -57,7 +57,7 @@
     border-right: 1px solid #dee2e6;
     transition: transform 0.3s ease;
     transform: translateX(0); /* Collapsed style */
-    z-index: 1000;
+    z-index: 900;
 }
 
 .sidebar.collapsed {
@@ -127,20 +127,22 @@
     padding: 10px;
     width: 100%;
     transition: transform 0.3s;
+    background-color: var(--color-border);
 }
 
 .movie-item:hover {
-    transform: scale(1.05); /* Scale up the item on hover */
+    transform: scale(1.05);
+    z-index: 1000; /* Scale up the item on hover */
 }
 .dropdown-wrapper {
     position: relative; /* Now dropdowns are positioned within this context */
 }
 
 .movie-thumbnail {
-    width: 50px; /* Thumbnail size */
-    height: 50px; /* Standard height */
+    width: 70px; /* Thumbnail size */
+    height: 100px; /* Standard height */
     border-radius: 4px; /* Slightly round corners */
-    margin-right: 10px; /* Space between the image and details */
+    margin-right: 20px; /* Space between the image and details */
 }
 .movie-details {
     flex: 1; /* Allow details to take remaining space */

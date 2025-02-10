@@ -14,7 +14,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MovieItem } from "@/utils/types/movieItem";
+import type { MovieItem } from "@/types/movieItem";
 import { defineProps } from "vue";
 
 defineProps<{

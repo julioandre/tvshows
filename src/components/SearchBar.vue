@@ -16,7 +16,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from "vue";
-import type { SearchProps } from "../utils/types/search";
+import type { SearchProps } from "../types/search";
 import { useDebounce } from "@/composables/useDebounce";
 import { useValidation } from "@/composables/useValidation";
 import SearchInput from "./SearchInput.vue";

@@ -4,7 +4,7 @@
       <img v-if="item.image" :src="item.image" :alt="item.name" class="movie-thumbnail" />
       <div class="movie-info">
         <h4 class="movie-title">{{ item.name }}</h4>
-        <p class="movie-description">{{ item.summary }}</p>
+        <p class="movie-description">{{ getTruncatedSummary(item.summary) }}</p>
         <span class="movie-rating">{{ item.rating }}</span>
       </div>
     </div>
@@ -13,7 +13,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MovieItem } from "@/utils/types/movieItem";
+import type { MovieItem } from "@/types/movieItem";
 import { ref } from "vue";
 import MovieModal from "./MovieModal.vue";
 
@@ -30,6 +30,12 @@ const openModal = (movie: MovieItem) => {
   console.log(movie.name);
   selectedMovie.value = movie;
   isModalVisible.value = true;
+};
+const getTruncatedSummary = (summary: string): string => {
+  if (summary.length <= 200) {
+    return summary; // Return full summary if it's 300 characters or less
+  }
+  return summary.substring(0, 200) + "..."; // Truncate to 300 characters and add ellipsis
 };
 
 // Function to close the modal

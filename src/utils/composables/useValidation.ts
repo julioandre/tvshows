@@ -1,4 +1,4 @@
-import type { ValidationResult } from "../types/search";
+import type { ValidationResult } from "../../types/search";
 
 export function useValidation(value: string, minLength: number = 0) {
   const validate = (): ValidationResult => {
@@ -11,6 +11,7 @@ export function useValidation(value: string, minLength: number = 0) {
 
     return {
       isValid: true,
+      errorMessage: "",
     };
   };
 
