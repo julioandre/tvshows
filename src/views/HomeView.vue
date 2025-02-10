@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import MovieList from "../components/MovieList.vue";
 import SearchBar from "../components/SearchBar.vue";
 import Sidebar from "../components/SideBar.vue";
+import RatingSort from "@/components/RatingSort.vue";
 
 const selectedGenre = ref<string | null>();
 const searchQuery = ref("");
@@ -84,19 +85,23 @@ const items = ref([
     rating: 8.7,
   },
 ]);
+const sortOrder = ref<"asc" | "desc">("asc");
 
 const filterByGenre = (genre: string) => {
   selectedGenre.value = genre === "Home" ? null : genre;
 };
+const setSortOrder = (order: "asc" | "desc") => {
+  sortOrder.value = order; // Update the selected rating based on the dropdown selection
+};
 
 const filteredMovies = computed(() => {
-  return items.value.filter((movie) => {
-    const matchesGenre = selectedGenre.value
-      ? movie.genres.includes(selectedGenre.value)
-      : items.value;
-    const matchesSearch = movie.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    return matchesGenre && matchesSearch; // Return movie if it matches genre and search
-  });
+  return items.value
+    .filter(
+      (movie) =>
+        (selectedGenre.value ? movie.genres.includes(selectedGenre.value) : items.value) &&
+        movie.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    )
+    .sort((a, b) => (sortOrder.value === "asc" ? a.rating - b.rating : b.rating - a.rating));
 });
 </script>
 
@@ -113,6 +118,7 @@ const filteredMovies = computed(() => {
       />
       <div>
         <h1>{{ selectedGenre ? selectedGenre : "Home" }}</h1>
+        <div><RatingSort @update="setSortOrder" /></div>
         <MovieList :items="filteredMovies" />
       </div>
     </div>
