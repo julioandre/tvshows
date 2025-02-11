@@ -17,6 +17,10 @@
     --sidebar-transition: 0.3s ease;
     --sidebar-z-index: 1000;
 
+    /*Image Properties*/
+    --image-width: 70px;
+    --image-height: 100px;
+
     /* Base Colors */
     --color-primary: #4a90e2;
     --color-primary-light: rgba(74, 144, 226, 0.1);
@@ -24,7 +28,9 @@
     --color-border: #ddd;
     --color-text: #333;
     --color-text-light: #666;
-    --color-background: #ffffff;
+    --color-background: #fffffffe;
+    --color-sidebar: #f8f9fa;
+    --color-sidebar-active: #e9ecef;
 
     /* Spacing System */
     --spacing-2xs: 2px;
@@ -36,7 +42,8 @@
     --spacing-2xl: 32px;
 
     /* Container Sizes */
-    --container-max-width: 500px;
+    --container-max-width: 400px;
+    --container-max-height: 100%;
     --container-padding-mobile: var(--spacing-sm);
     --container-padding-desktop: var(--spacing-md);
 
@@ -80,5 +87,5 @@
     /* Shadows */
     --shadow-focus: 0 0 0 3px var(--color-primary-light);
     --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
-    --shadow-md: 0 2px 4px rgba(0, 0, 0, 0.1);
+    --shadow-md: -3px 0px 10px rgba(0, 0, 0, 0.1);
 }

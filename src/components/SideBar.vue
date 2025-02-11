@@ -6,18 +6,21 @@
         <span class="toggle-icon">☰</span>
       </button>
     </div>
-    <nav class="sidebar-links">
-      <router-link
-        v-for="link in links"
-        :key="link.name"
-        :to="link.path"
-        class="sidebar-link"
-        :class="{ active: currentLink === link.name }"
-        @click="selectGenre(link.name)"
-      >
-        {{ link.icon }} {{ link.name }}
-      </router-link>
-    </nav>
+    <h3>Genres</h3>
+    <ul>
+      <li v-for="genre in links" :key="genre.name" class="sidebar-links">
+        <label>
+          <input
+            class="sidebar-link"
+            type="checkbox"
+            :value="genre.name"
+            v-model="selectedGenres"
+          />
+          {{ genre.name }}
+        </label>
+      </li>
+    </ul>
+    <button @click="updateSelectedGenres">Apply Filters</button>
   </aside>
   <div class="sidebar-overlay" v-if="isExpanded" @click="toggleSidebar"></div>
 </template>
@@ -26,13 +29,17 @@
 import { ref } from "vue";
 import { useBreakpoint } from "../composables/useBreakpoints";
 
+const selectedGenres = ref<string[]>([]);
+
 const emit = defineEmits<{
-  (e: "filter", genre: string): void;
+  (e: "filter", genre: string[]): void;
 }>();
 
-const selectGenre = (genre: string) => {
-  setCurrentLink(genre);
-  emit("filter", genre); // Emit the selected genre
+const updateSelectedGenres = () => {
+  if (isMobile) {
+    isExpanded.value = false;
+  }
+  emit("filter", selectedGenres.value); // Emit the selected genre
 };
 
 const { isMobile } = useBreakpoint();
@@ -45,7 +52,6 @@ interface Link {
 
 // Sample sidebar links
 const links: Link[] = [
-  { name: "Home", icon: "🏠", path: "/" },
   { name: "Action", icon: "🏃‍♂️", path: "/about" },
   { name: "Thriller", icon: "😱", path: "/thriller" },
   { name: "Comedy", icon: "😂", path: "/comedy" },
@@ -61,17 +67,8 @@ const links: Link[] = [
 ];
 
 const isExpanded = isMobile ? ref<boolean>(false) : ref<boolean>(true);
-const currentLink = ref<string>(links[0].name);
 
 const toggleSidebar = () => {
   isExpanded.value = !isExpanded.value;
-};
-
-const setCurrentLink = (name: string) => {
-  currentLink.value = name;
-  // Close sidebar when a link is clicked
-  if (isMobile) {
-    isExpanded.value = false;
-  }
 };
 </script>

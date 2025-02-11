@@ -7,7 +7,7 @@ import Sidebar from "../components/SideBar.vue";
 import RatingSort from "@/components/RatingSort.vue";
 import PaginationComponent from "@/components/PaginationComponent.vue";
 
-const selectedGenre = ref<string | null>();
+const selectedGenre = ref<string[]>([]);
 const searchQuery = ref("");
 const currentPage = ref(1); // Track current page
 const itemsPerPage = ref(50);
@@ -25,8 +25,9 @@ const handleClear = () => {
   // Handle clear event
 };
 
-const filterByGenre = (genre: string) => {
-  selectedGenre.value = genre === "Home" ? null : genre;
+const filterByGenre = (genres: string[]) => {
+  console.log(genres);
+  selectedGenre.value = genres;
 };
 const setSortOrder = (order: "asc" | "desc") => {
   sortOrder.value = order; // Update the selected rating based on the dropdown selection
@@ -34,15 +35,20 @@ const setSortOrder = (order: "asc" | "desc") => {
 console.log(movies.value);
 const filteredMovies = reactive(
   computed(() => {
+    console.log(searchQuery.value.length);
     return movies.value
-      .filter(
-        (movie) =>
-          (selectedGenre.value ? movie.genres.includes(selectedGenre.value) : movies.value) &&
-          movie.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-      )
+      .filter((movie) => {
+        const matchesGenre =
+          selectedGenre.value.length === 0
+            ? movies.value
+            : movie.genres.some((genre) => selectedGenre.value.includes(genre));
+        const matchesSearch = movie.name.toLowerCase().includes(searchQuery.value.toLowerCase());
+        return matchesGenre && matchesSearch;
+      })
       .sort((a, b) => (sortOrder.value === "asc" ? a.rating - b.rating : b.rating - a.rating));
   })
 );
+
 const totalPages = computed(() => {
   return Math.ceil(filteredMovies.value.length / itemsPerPage.value) > 0
     ? Math.ceil(filteredMovies.value.length / itemsPerPage.value)
@@ -82,7 +88,7 @@ onMounted(() => {
         @clear="handleClear"
       />
       <div>
-        <h1>{{ selectedGenre ? selectedGenre : "Home" }}</h1>
+        <!-- <h1>{{ selectedGenre ? selectedGenre : "Home" }}</h1> -->
         <div v-if="loading">Loading movies...</div>
         <div v-if="error">{{ error }}</div>
         <div><RatingSort @update="setSortOrder" /></div>

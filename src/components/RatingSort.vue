@@ -1,6 +1,6 @@
 <template>
   <div class="rating-filter">
-    <label for="rating-filter" class="filter-label">Filte by Rating:</label>
+    <label for="rating-filter" class="filter-label">Sort by Rating:</label>
     <select
       id="rating-filter"
       v-model="selectedRating"
@@ -18,10 +18,10 @@ import { ref } from "vue";
 
 // Define emits for communication with parent component
 const emit = defineEmits<{
-  (e: "update", value: 'asc'|'desc'): void;
+  (e: "update", value: "asc" | "desc"): void;
 }>();
 
-const selectedRating = ref<'asc'|'desc'>('asc');
+const selectedRating = ref<"asc" | "desc">("asc");
 
 // Emit the selected rating when it changes
 const emitSortingChange = () => {

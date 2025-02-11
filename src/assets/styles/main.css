@@ -29,8 +29,8 @@
     border-color: var(--color-error);
 }
 .search-input:focus {
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-focus);
 }
 .clear-button {
     position: absolute;
@@ -51,11 +51,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 100%;
+    height: var(--container-max-height);
     width: 250px; /* Expanded width */
-    background: #f8f9fa;
+    background: var(--color-sidebar);
     border-right: 1px solid #dee2e6;
-    transition: transform 0.3s ease;
+    transition: var(--transition-normal);
     transform: translateX(0); /* Collapsed style */
     z-index: 1000;
 }
@@ -65,7 +65,7 @@
 }
 
 .sidebar-header {
-    padding: 16px;
+    padding: var(--spacing-lg);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -73,7 +73,7 @@
 
 .sidebar-title {
     margin: 0;
-    font-size: 20px;
+    font-size: var(--font-size-lg);
 }
 
 .toggle-button {
@@ -89,19 +89,18 @@
 
 .sidebar-link {
     display: block;
-    padding: 12px;
-    color: #333;
+    padding: var(--spacing-md);
+    color: var(--sidebar-text);
     text-decoration: none;
 }
 
-.sidebar-link:hover,
 .sidebar-link.active {
-    background: #e9ecef; /* Highlight for active/hover state */
+    background: var(--color-sidebar-active); /* Highlight for active/hover state */
 }
 
 .content {
     flex: 1; /* Makes it take the remaining space */
-    transition: margin-left 0.3s ease; /* Smooth transition for margin */
+    transition: margin-left var(--transition-normal); /* Smooth transition for margin */
     margin-left: var(--sidebar-collapsed-width); /* Space for collapsed sidebar */
 }
 
@@ -111,23 +110,23 @@
     color: var(--color-error);
 }
 .is-focused {
-    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+    box-shadow: var(--shadow-focus);
 }
 .movie-list {
     display: flex;
     margin-bottom: 8%;
     flex-wrap: wrap;
-    gap: 40px;
+    gap: var(--spacing-2xl);
 }
 .movie-item {
     display: flex;
     align-items: center;
     cursor: pointer;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 10px;
+    border: var(--border-width-thin) solid var(--color-border);
+    border-radius: var(--border-radius-sm);
+    padding: var(--spacing-md);
     width: 100%;
-    transition: transform 0.3s;
+    transition: var(--transition-normal);
     background-color: var(--color-border);
 }
 
@@ -139,34 +138,34 @@
 }
 
 .movie-thumbnail {
-    width: 70px; /* Thumbnail size */
-    height: 100px; /* Standard height */
-    border-radius: 4px; /* Slightly round corners */
-    margin-right: 20px; /* Space between the image and details */
+    width: var(--image-width); /* Thumbnail size */
+    height: var(--image-height); /* Standard height */
+    border-radius: var(--border-radius-sm); /* Slightly round corners */
+    margin-right: var(--spacing-xl); /* Space between the image and details */
 }
 .movie-details {
     flex: 1; /* Allow details to take remaining space */
 }
 
 .movie-title {
-    font-size: 1.2rem; /* Slightly larger font size for title */
+    font-size: var(--font-size-lg); /* Slightly larger font size for title */
     font-weight: bold; /* Bold title text */
     display: block; /* Make title a block to stack on summary */
 }
 
 .movie-summary {
-    margin-top: 5px; /* Space between title and summary */
-    font-size: 0.9rem; /* Standard font size for summary */
-    color: gray; /* Optional: style the summary text */
+    margin-top: var(--spacing-xs); /* Space between title and summary */
+    font-size: var(--font-size-sm); /* Standard font size for summary */
+    color: var(--color-text-light); /* Optional: style the summary text */
 }
 .modal {
     position: fixed;
     top: 0;
     right: 0;
-    width: 400px;
+    width: var(--container-max-width);
     height: 100vh;
-    background: white;
-    box-shadow: -3px 0 10px rgba(0, 0, 0, 0.1);
+    background: var(--col);
+    box-shadow: var(--shadow-sm);
     z-index: 1000;
     transition: transform 0.3s ease;
 }
