@@ -51,7 +51,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    height: 100vh;
+    height: 100%;
     width: 250px; /* Expanded width */
     background: #f8f9fa;
     border-right: 1px solid #dee2e6;
@@ -115,8 +115,9 @@
 }
 .movie-list {
     display: flex;
+    margin-bottom: 8%;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 40px;
 }
 .movie-item {
     display: flex;
@@ -222,6 +223,12 @@
         position: relative;
         width: 100%; /* Make select take full width on small screens */
     }
+    .movie-list {
+        display: flex;
+        margin-bottom: 20%;
+        flex-wrap: wrap;
+        gap: 40px;
+    }
 }
 /* Tablet and Desktop Styles */
 @media (min-width: 576px) {
@@ -259,9 +266,11 @@
         border: 1px solid #ddd;
         border-radius: 5px;
         padding: 10px;
-        margin-left: 2.2%;
-        width: 45%;
+        width: 40%;
         transition: transform 0.3s;
+    }
+    .movie-list {
+        margin-left: 9%;
     }
 }
 @media (max-width: 768px) {

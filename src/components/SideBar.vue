@@ -3,7 +3,7 @@
     <div class="sidebar-header">
       <h2 class="sidebar-title">Movie Juke</h2>
       <button v-if="isMobile" class="toggle-button" @click="toggleSidebar">
-        <span class="toggle-icon">{{ isExpanded ? "➖" : "➕" }}</span>
+        <span class="toggle-icon">☰</span>
       </button>
     </div>
     <nav class="sidebar-links">

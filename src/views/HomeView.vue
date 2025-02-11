@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { computed, onMounted, ref } from "vue";
+import { computed, onMounted, reactive, ref } from "vue";
 import { getShows } from "@/utils/composables/getShows";
 import MovieList from "../components/MovieList.vue";
 import SearchBar from "../components/SearchBar.vue";
 import Sidebar from "../components/SideBar.vue";
 import RatingSort from "@/components/RatingSort.vue";
+import PaginationComponent from "@/components/PaginationComponent.vue";
 
 const selectedGenre = ref<string | null>();
 const searchQuery = ref("");
+const currentPage = ref(1); // Track current page
+const itemsPerPage = ref(50);
 const handleSearch = (query: string) => {
   console.log("Searching for:", query);
   searchQuery.value = query;
@@ -18,6 +21,7 @@ const sortOrder = ref<"asc" | "desc">("asc");
 
 const handleClear = () => {
   console.log("Search cleared");
+  searchQuery.value = "";
   // Handle clear event
 };
 
@@ -28,15 +32,39 @@ const setSortOrder = (order: "asc" | "desc") => {
   sortOrder.value = order; // Update the selected rating based on the dropdown selection
 };
 console.log(movies.value);
-const filteredMovies = computed(() => {
-  return movies.value
-    .filter(
-      (movie) =>
-        (selectedGenre.value ? movie.genres.includes(selectedGenre.value) : movies.value) &&
-        movie.name.toLowerCase().includes(searchQuery.value.toLowerCase())
-    )
-    .sort((a, b) => (sortOrder.value === "asc" ? a.rating - b.rating : b.rating - a.rating));
+const filteredMovies = reactive(
+  computed(() => {
+    return movies.value
+      .filter(
+        (movie) =>
+          (selectedGenre.value ? movie.genres.includes(selectedGenre.value) : movies.value) &&
+          movie.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+      )
+      .sort((a, b) => (sortOrder.value === "asc" ? a.rating - b.rating : b.rating - a.rating));
+  })
+);
+const totalPages = computed(() => {
+  return Math.ceil(filteredMovies.value.length / itemsPerPage.value) > 0
+    ? Math.ceil(filteredMovies.value.length / itemsPerPage.value)
+    : 1; // Calculate total pages based on filtered results
 });
+
+// Get movies for the current page
+const paginatedMovies = ref(
+  computed(() => {
+    const start = (currentPage.value - 1) * itemsPerPage.value;
+    const end = start + itemsPerPage.value;
+    if (filteredMovies.value.length < 50) {
+      handlePageChange(1);
+      return filteredMovies.value.slice(0, 50);
+    }
+    console.log(filteredMovies.value.slice(start, end));
+    return filteredMovies.value.slice(start, end); // Return only the movies for the current page
+  })
+);
+const handlePageChange = (pageNumber: number) => {
+  currentPage.value = pageNumber;
+};
 onMounted(() => {
   fetchShows();
 });
@@ -58,7 +86,12 @@ onMounted(() => {
         <div v-if="loading">Loading movies...</div>
         <div v-if="error">{{ error }}</div>
         <div><RatingSort @update="setSortOrder" /></div>
-        <MovieList :items="filteredMovies" />
+        <MovieList :items="paginatedMovies" />
+        <PaginationComponent
+          :currentPage="currentPage"
+          :totalPages="totalPages"
+          @pageChange="handlePageChange"
+        />
       </div>
     </div>
   </div>

@@ -24,6 +24,7 @@ const props = defineProps<{
 }>();
 const isModalVisible = ref(false);
 const selectedMovie = ref<MovieItem>();
+console.log(props.items);
 
 // Function to open modal with the selected movie
 const openModal = (movie: MovieItem) => {
