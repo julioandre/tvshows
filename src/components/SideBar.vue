@@ -14,13 +14,13 @@
         </label>
       </li>
     </ul>
-    <button class="sidebar-button" @click="updateSelectedGenres">Apply Filters</button>
+    <button class="sidebar-button" @click="clearSelectedGenres">Clear Filters</button>
   </aside>
   <div class="sidebar-overlay" v-if="isExpanded" @click="toggleSidebar"></div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import { useBreakpoint } from "../composables/useBreakpoints";
 import type { Link } from "@/types/links";
 
@@ -32,6 +32,9 @@ const props = defineProps<{
 const emit = defineEmits<{
   (e: "filter", genre: string[]): void;
 }>();
+const clearSelectedGenres = () => {
+  selectedGenre.value = [];
+};
 
 const updateSelectedGenres = () => {
   if (isMobile) {
@@ -49,6 +52,9 @@ const isExpanded = isMobile ? ref<boolean>(false) : ref<boolean>(true);
 const toggleSidebar = () => {
   isExpanded.value = !isExpanded.value;
 };
+watch(selectedGenre, () => {
+  updateSelectedGenres();
+});
 onMounted(() => {
   selectedGenre.value = props.selctedGenres;
   console.log(selectedGenre.value);
