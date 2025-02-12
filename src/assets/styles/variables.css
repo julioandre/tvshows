@@ -18,8 +18,8 @@
     --sidebar-z-index: 1000;
 
     /*Image Properties*/
-    --image-width: 70px;
-    --image-height: 100px;
+    --image-width: 300px;
+    --image-height: 250px;
 
     /* Base Colors */
     --color-primary: #4a90e2;

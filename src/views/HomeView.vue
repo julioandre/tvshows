@@ -37,7 +37,7 @@ const setSortOrder = (order: "asc" | "desc") => {
 };
 const getMoviesByGenre = (genre: string) => {
   console.log(genre);
-  return shows.value.filter((movie) => movie.genres.includes(genre)).slice(0, 15);
+  return shows.value.filter((movie) => movie.genres.includes(genre)).slice(0, 20);
 };
 console.log(shows.value);
 const filteredMovies = reactive(
@@ -106,7 +106,7 @@ onMounted(() => {
         <div v-if="loading">Loading movies...</div>
         <div v-if="error">{{ error }}</div>
         <div><RatingSort @update="setSortOrder" /></div>
-        <div v-if="selectedGenre.length < 1">
+        <div v-if="selectedGenre.length < 1 && searchQuery.length < 1">
           <div v-for="genre in links" :key="genre.name" class="genre-section">
             <h2>{{ genre.name }}</h2>
             <CardList
@@ -118,7 +118,10 @@ onMounted(() => {
           </div>
         </div>
 
-        <MovieList v-if="selectedGenre.length > 0" :items="paginatedMovies" />
+        <MovieList
+          v-if="selectedGenre.length > 0 || searchQuery.length > 0"
+          :items="paginatedMovies"
+        />
         <PaginationComponent
           :currentPage="currentPage"
           :totalPages="totalPages"

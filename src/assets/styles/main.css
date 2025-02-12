@@ -90,8 +90,9 @@
     margin-top: var(--spacing-2xl);
 }
 .sidebar-button {
-    padding: 8px 12px;
+    padding: 12px 12px;
     border: 1px solid #007bff; /* Border color */
+    font-size: var(--font-size-md);
     border-radius: 4px; /* Rounded corners */
     background-color: #007bff; /* Button background color */
     color: white; /* Button text color */
@@ -142,19 +143,21 @@
     gap: var(--spacing-2xl);
 }
 .movie-item {
-    display: flex;
+    display: inline-block;
     align-items: center;
     cursor: pointer;
     border: var(--border-width-thin) solid var(--color-border);
     border-radius: var(--border-radius-sm);
-    padding: var(--spacing-md);
-    width: 100%;
     transition: var(--transition-normal);
-    background-color: var(--color-border);
+    background-color: var(white);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+    max-width: 300px; /* Fixed width for each card */
+    height: 350px;
+    margin: 10px;
 }
 
 .movie-item:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 .dropdown-wrapper {
     position: relative; /* Now dropdowns are positioned within this context */
@@ -163,8 +166,7 @@
 .movie-thumbnail {
     width: var(--image-width); /* Thumbnail size */
     height: var(--image-height); /* Standard height */
-    border-radius: var(--border-radius-sm); /* Slightly round corners */
-    margin-right: var(--spacing-xl); /* Space between the image and details */
+    border-radius: var(--border-radius-sm); /* Slightly round corners */ /* Space between the image and details */
 }
 .movie-details {
     flex: 1; /* Allow details to take remaining space */
@@ -186,8 +188,8 @@
     top: 0;
     right: 0;
     width: var(--container-max-width);
-    height: 100vh;
-    background: var(--col);
+    height: 100%;
+    background: var(--color-background);
     box-shadow: var(--shadow-sm);
     z-index: 1000;
     transition: transform 0.3s ease;
@@ -227,6 +229,73 @@
     border: 1px solid #ccc; /* Border for the select element */
     border-radius: 4px; /* Rounded corners */
     max-width: 200px; /* Optional: limit width */
+}
+.card-list-container {
+    position: relative; /* Necessary for absolute positioning of buttons */
+    overflow: hidden; /* Hide overflow if needed */
+}
+
+.card-list {
+    display: flex; /* Align items in a row */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: 10px; /* Padding for the card list */
+    scroll-behavior: smooth; /* Smooth scrolling behavior */
+}
+
+.card-item {
+    cursor: pointer;
+    display: inline-block; /* Keeps items in a row */
+    background: #ffffff; /* Card background */
+    transition: var(--transition-normal);
+    border-radius: 8px; /* Rounded corners */ /* Padding inside the card */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+    max-width: 300px; /* Fixed width for each card */
+    height: 300px;
+    margin: 10px;
+}
+.card-item:hover {
+    transform: scale(1.05);
+}
+
+.scroll-button {
+    position: absolute; /* Absolute positioning to overlap the card list */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust to center */
+    background: #007bff; /* Blue background for the buttons */
+    color: white; /* White text color */
+    border: none; /* No border */
+    border-radius: 4px; /* Rounded corners */
+    padding: 10px; /* Padding for buttons */
+    cursor: pointer; /* Pointer cursor */
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.scroll-button.left {
+    left: 10px; /* Positioning for the left button */
+}
+
+.scroll-button.right {
+    right: 10px; /* Positioning for the right button */
+}
+
+.card-title {
+    margin-left: 20px;
+}
+
+.scroll-button:hover {
+    background: #0056b3; /* Darker background on hover */
+}
+.view-all-button {
+    position: absolute; /* Fixed positioning for the button */
+    top: 10px; /* Space from the top */
+    right: 10px; /* Space from the right */
+    padding: 8px 16px; /* Button padding */
+    background-color: #007bff; /* Button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    z-index: 10; /* Ensure it is on top */
 }
 
 /* Optional: Adjust appearance in mobile layout */
@@ -282,14 +351,12 @@
         color: var(--color-error);
     }
     .movie-item {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 10px;
-        width: 40%;
-        transition: transform 0.3s;
+        display: inline-block; /* Keeps items in a row */
+        background: #ffffff; /* Card background */
+        border-radius: 8px; /* Rounded corners */ /* Padding inside the card */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+        max-width: 300px; /* Fixed width for each card */
+        margin: 10px;
     }
     .movie-list {
         margin-left: 9%;
