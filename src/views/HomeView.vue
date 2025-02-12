@@ -81,7 +81,7 @@ onMounted(() => {
     <Sidebar @filter="filterByGenre" />
     <div class="content">
       <SearchBar
-        placeholder="Search products..."
+        placeholder="Search Shows..."
         :minLength="0"
         :debounceTime="500"
         @search="handleSearch"
