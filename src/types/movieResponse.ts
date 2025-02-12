@@ -1,15 +1,4 @@
-interface Country {
-  name: string;
-  code: string;
-  timezone: string;
-}
-
-interface Network {
-  id: number;
-  name: string;
-  country: Country;
-  officialSite: string;
-}
+import type { Network } from "./network";
 
 interface Externals {
   tvrage: number;

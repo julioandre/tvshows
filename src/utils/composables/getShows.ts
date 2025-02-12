@@ -16,7 +16,7 @@ export function getShows() {
         id: item.id,
         name: item.name,
         summary: item.summary.replace(/<[^>]+>/g, ""),
-        image: item.image.medium,
+        image: item.image.original,
         status: item.status,
         premiered: item.premiered,
         genres: item.genres,

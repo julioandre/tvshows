@@ -85,6 +85,21 @@
 .sidebar-links {
     padding: 0;
     list-style: none;
+    display: flex;
+    align-items: center;
+    margin-top: var(--spacing-2xl);
+}
+.sidebar-button {
+    padding: 8px 12px;
+    border: 1px solid #007bff; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #007bff; /* Button background color */
+    color: white; /* Button text color */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-top: var(--spacing-2xl);
+    margin-left: var(--spacing-2xl);
 }
 
 .sidebar-link {
@@ -92,6 +107,14 @@
     padding: var(--spacing-md);
     color: var(--sidebar-text);
     text-decoration: none;
+    cursor: pointer;
+    transform: scale(2); /* Scale the checkbox for larger appearance */
+}
+.sidebar label {
+    justify-content: center;
+    font-size: larger;
+    margin-left: 10px; /* Space between checkbox and label */
+    cursor: pointer; /* Pointer cursor */
 }
 
 .sidebar-link.active {

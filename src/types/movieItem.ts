@@ -1,3 +1,5 @@
+import type { Network } from "./network";
+
 export interface MovieItem {
   id: number;
   name: string;
@@ -7,4 +9,6 @@ export interface MovieItem {
   premiered: string;
   genres: string[];
   rating: number;
+  ended: string | null;
+  network: Network;
 }

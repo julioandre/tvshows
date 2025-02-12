@@ -1,5 +1,6 @@
 <template>
   <div class="card-list-container">
+    <button class="view-all-button" @click="updateSelectedGenres">View All{{ genre }}</button>
     <button class="scroll-button left" @click="scrollLeft">❮</button>
 
     <div class="card-list" ref="cardList">
@@ -17,17 +18,15 @@
 </template>
 
 <script setup lang="ts">
+import type { MovieItem } from "@/types/movieItem";
 import { defineProps, ref } from "vue";
 
-export interface CardItem {
-  id: number;
-  name: string;
-  summary: string;
-  image: string;
-}
-
-defineProps<{
-  items: CardItem[];
+const props = defineProps<{
+  items: MovieItem[];
+  genre: string;
+}>();
+const emit = defineEmits<{
+  (e: "filter", genre: string[]): void;
 }>();
 
 const cardList = ref<HTMLElement | null>(null);
@@ -51,21 +50,22 @@ const scrollRight = () => {
     });
   }
 };
+const updateSelectedGenres = () => {
+  emit("filter", [props.genre]); // Emit the selected genre
+};
 </script>
 
 <style scoped>
 .card-list-container {
-  display: flex; /* Use flexbox to arrange scrolling buttons and card list */
-  align-items: center; /* Center items vertically */
+  position: relative; /* Necessary for absolute positioning of buttons */
+  overflow: hidden; /* Hide overflow if needed */
 }
 
 .card-list {
-  display: flex; /* Arrange cards in a row */
-  overflow-x: auto; /* Allow horizontal scrolling */
-  overflow-y: hidden; /* Hide vertical scrollbar */
-  scroll-behavior: smooth; /* Enable smooth scrolling */
-  gap: 10px; /* Space between cards */
-  padding: 10px; /* Optional padding */
+  display: flex; /* Align items in a row */
+  overflow-x: auto; /* Enable horizontal scrolling */
+  padding: 10px; /* Padding for the card list */
+  scroll-behavior: smooth; /* Smooth scrolling behavior */
 }
 
 .card-item {
@@ -78,16 +78,39 @@ const scrollRight = () => {
 }
 
 .scroll-button {
+  position: absolute; /* Absolute positioning to overlap the card list */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust to center */
   background: #007bff; /* Blue background for the buttons */
   color: white; /* White text color */
   border: none; /* No border */
   border-radius: 4px; /* Rounded corners */
   padding: 10px; /* Padding for buttons */
-  cursor: pointer; /* Pointer cursor on hover */
-  transition: background 0.3s; /* Transition for background */
+  cursor: pointer; /* Pointer cursor */
+  z-index: 10; /* Ensure it appears above other elements */
+}
+
+.scroll-button.left {
+  left: 10px; /* Positioning for the left button */
+}
+
+.scroll-button.right {
+  right: 10px; /* Positioning for the right button */
 }
 
 .scroll-button:hover {
-  background: #0056b3; /* Darker blue on hover */
+  background: #0056b3; /* Darker background on hover */
+}
+.view-all-button {
+  position: absolute; /* Fixed positioning for the button */
+  top: 10px; /* Space from the top */
+  right: 10px; /* Space from the right */
+  padding: 8px 16px; /* Button padding */
+  background-color: #007bff; /* Button color */
+  color: white; /* Text color */
+  border: none; /* No border */
+  border-radius: 5px; /* Rounded corners */
+  cursor: pointer; /* Pointer cursor */
+  z-index: 10; /* Ensure it is on top */
 }
 </style>
