@@ -21,7 +21,8 @@ Typescript is used in this project to enable:
 
 ### Reactivity & State
 - I make use of pinia store library to keep the state of the list of shows via api call when the application is mounted
-- I make use of Vue state and emits to handle reactivity throughout the rest of the project 
+- I make use of Vue state and emits to handle reactivity throughout the rest of the project
+- I make use of computed() functions to react to act to changes in state for searching, filtering etc.
 
 ### Sorting, Searching and Filtering 
 
