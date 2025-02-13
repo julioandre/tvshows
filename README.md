@@ -21,6 +21,10 @@ For the list of Genres I had hardcoded list of genres, because looping through t
 
 I added pagination for when the shows listed were more than 50 per page;
 
+### Search & Filter
+
+The Search and Filter work hand in hand, in the sense that the search, only searches items that are on the filter page 
+
 ## Versioning
  Node: >= 18.4
  NPM: >= 9.5
