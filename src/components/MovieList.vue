@@ -29,4 +29,4 @@ const openPage = (movie: MovieItem) => {
     params: { show: showString },
   });
 };
-
+</script>
