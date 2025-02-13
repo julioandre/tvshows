@@ -1,25 +1,57 @@
-# tvshows
+# TVShows
 
-This is a VueJs frontend project that fetches a list of TV shows and then displays them on a dashboard for the user. This dashboard has a search functionality and also a sort by rating functionality to sort by the shows rating.
-Additiionaly it is able to filter based on the show genre.
+This is a VueJs frontend project to show my frontend skills. The main premise of the project is to provide a dashboard for the user that displays TV shows and categorizes these shows based on genre 
+
+## Functionality 
+
+ - Dashboard displays various horizontal scrollable list of shows based on Genre
+ - The dashboard allows the user to search for movies based on their title
+ - The dashboard groups shows based on their genre and also allows to sort them by their rating
+ - Full responsiveness on mobile,tablet & desktop screens
+ - Dashboard shows all movies of a specific category when view more on the horizontal list is clicked
+
 
 ## Development Decisions
 
 ### TypeScript 
+Typescript is used in this project to enable:
+- Satic typing
+- Interfaces and Custom typing
+- Less prone to runtime errors
 
-I made use of Typescript in my project to reduce runtime errors by adding strong typing to  and static checking to my projects.
+### Reactivity & State
+- I make use of pinia store library to keep the state of the list of shows via api call when the application is mounted
+- I make use of Vue state and emits to handle reactivity throughout the rest of the project 
 
-### Pinia & Vitest 
+### Sorting, Searching and Filtering 
 
-I made use of the pinia library to create a store for global state management fr retrieving the list of shows from the api. I also made use of vitest and pinia test for mocking and testing my components 
+For the logic to my Search, Sort and Filter:
+- Filter takes priority over the search functionality so the search function works on filtered values 
+- Sorting takes the least priority and has effect on Filtered & Search values
 
-### Genre List 
+## Testing 
 
-For the list of Genres I had hardcoded list of genres, because looping through the entire data to find unique genres when we have a set of universal genres of shows was a waste of resources.
+With the help of pinia and vitest I have created unit test for all the components making sure that all pages and functionality work as intended
+
+
+![Screenshot 2025-02-13 at 12 27 29](https://github.com/user-attachments/assets/20427e95-8043-43c6-b29f-dec5ca8e9517)
+
+
+## Extras
 
 ### Pagination 
+I added a pagaination element to display the first 50 results based on filters and search. This is to give the website a more cleaner feel.
 
-I added pagination for when the shows listed were more than 50 per page;
+### Debounced Search 
+I made use of debounce in my search functionality for a more intuitive design and faster search:
+- Search results are provided as user is typing
+
+### Conditional Rendering 
+To keep the user always engaged I make sure not to show any blank pages in the application and instead provide the user with an error message or a loading screen.
+
+### Global CSS
+
+I make use of a global css file to make sure all the css classes are available to all the components in the application.
 
 ### Search & Filter
 
