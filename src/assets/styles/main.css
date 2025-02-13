@@ -381,7 +381,7 @@ movie-detail-page {
     .movie-thumbnail {
         width: 105px; /* Thumbnail size */
         height: 140px; /* Standard height */
-        border-radius: var(--border-radius-sm); /* Slightly round corners */ /* Space between the image and details */
+        border-radius: var(--border-radius-sm); /* Slightly round corners */
     }
     .card-title {
         font-size: 10px;
