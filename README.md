@@ -1,10 +1,26 @@
 # tvshows
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a VueJs frontend project that fetches a list of TV shows and then displays them on a dashboard for the user. These dashboard has a serch functionality and also a sort by rating functionality to sort by the shows rating.
+Additiionaly it is able to filter based on the show genre.
 
-## Recommended IDE Setup
+## Development Decisions
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+### TypeScript 
+
+I made use of Typescript in my project to reduce runtime errors by adding strong typing to  and static checking to my projects & to make the code easily readable.
+
+### Pinia & Vitest 
+
+I made use of the pinia library to create a store for global state management fr retrieving the list of shows from the api. I also made use of vitest and pinia test for mocking and testing my components 
+
+### Genre List 
+
+For the list of Genres I had hardcoded list of genres, because looping through the entire data to find unique genres when we have a set of universal genres of shows was a waste of resources.
+
+### Pagination 
+
+I added pagination for when the shows listed were more than 50 per page;
+
 
 ## Type Support for `.vue` Imports in TS
 
