@@ -52,9 +52,9 @@
     top: 0;
     left: 0;
     height: var(--container-max-height);
-    width: 250px; /* Expanded width */
+    width: var(--sidebar-width); /* Expanded width */
     background: var(--color-sidebar);
-    border-right: 1px solid #dee2e6;
+    border-right: 1px solid var(--sidebar-border);
     transition: var(--transition-normal);
     transform: translateX(0); /* Collapsed style */
     z-index: 1000;
@@ -85,6 +85,22 @@
 .sidebar-links {
     padding: 0;
     list-style: none;
+    display: flex;
+    align-items: center;
+    margin-top: var(--spacing-2xl);
+}
+.sidebar-button {
+    padding: var(--spacing-md);
+    border: 1px solid var(--color-primary); /* Border color */
+    font-size: var(--font-size-md);
+    border-radius: var(--spacing-xs); /* Rounded corners */
+    background-color: var(--color-primary); /* Button background color */
+    color: var(--color-background); /* Button text color */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    margin-top: var(--spacing-2xl);
+    margin-left: var(--spacing-2xl);
 }
 
 .sidebar-link {
@@ -92,6 +108,14 @@
     padding: var(--spacing-md);
     color: var(--sidebar-text);
     text-decoration: none;
+    cursor: pointer;
+    transform: scale(2); /* Scale the checkbox for larger appearance */
+}
+.sidebar label {
+    justify-content: center;
+    font-size: larger;
+    margin-left: var(--spacing-md); /* Space between checkbox and label */
+    cursor: pointer; /* Pointer cursor */
 }
 
 .sidebar-link.active {
@@ -119,19 +143,21 @@
     gap: var(--spacing-2xl);
 }
 .movie-item {
-    display: flex;
+    display: inline-block;
     align-items: center;
     cursor: pointer;
     border: var(--border-width-thin) solid var(--color-border);
     border-radius: var(--border-radius-sm);
-    padding: var(--spacing-md);
-    width: 100%;
     transition: var(--transition-normal);
-    background-color: var(--color-border);
+    background-color: var(--color-background);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+    max-width: var(--movie-item-max-width); /* Fixed width for each card */
+    height: var(--movie-item-max-height);
+    margin: var(--spacing-md);
 }
 
 .movie-item:hover {
-    transform: scale(1.05);
+    transform: scale(1.1);
 }
 .dropdown-wrapper {
     position: relative; /* Now dropdowns are positioned within this context */
@@ -141,7 +167,6 @@
     width: var(--image-width); /* Thumbnail size */
     height: var(--image-height); /* Standard height */
     border-radius: var(--border-radius-sm); /* Slightly round corners */
-    margin-right: var(--spacing-xl); /* Space between the image and details */
 }
 .movie-details {
     flex: 1; /* Allow details to take remaining space */
@@ -158,52 +183,150 @@
     font-size: var(--font-size-sm); /* Standard font size for summary */
     color: var(--color-text-light); /* Optional: style the summary text */
 }
-.modal {
-    position: fixed;
-    top: 0;
-    right: 0;
-    width: var(--container-max-width);
-    height: 100vh;
-    background: var(--col);
-    box-shadow: var(--shadow-sm);
-    z-index: 1000;
-    transition: transform 0.3s ease;
-}
-
-.modal-content {
-    padding: 20px;
-}
 
 .close {
     cursor: pointer;
-    font-size: 24px;
+    font-size: var(--font-size-xl);
     float: right;
 }
 
 .movie-image {
     max-width: 100%;
-    border-radius: 5px;
+    border-radius: var(--border-radius-sm);
 }
 .rating-filter {
     display: flex;
     align-items: center; /* Align items in the center vertically */
     justify-content: flex-start; /* Align items to the left */
     flex-wrap: wrap; /* Allows wrapping in smaller screens */
-    margin-bottom: 1rem; /* Space below the filter */
+    margin-bottom: var(--spacing-lg); /* Space below the filter */
 }
 
 .filter-label {
-    margin-right: 10px; /* Space between label and select */
-    font-size: 1rem; /* Font size for the label */
+    margin-right: var(--spacing-md); /* Space between label and select */
+    font-size: var(--font-size-sm); /* Font size for the label */
 }
 
 .filter-select {
     display: block;
-    padding: 5px; /* Inner padding for the select box */
-    font-size: 1rem; /* Ensuring readable font size */
+    padding: var(--spacing-xs); /* Inner padding for the select box */
+    font-size: var(--font-size-sm); /* Ensuring readable font size */
     border: 1px solid #ccc; /* Border for the select element */
-    border-radius: 4px; /* Rounded corners */
+    border-radius: var(--border-radius-sm); /* Rounded corners */
     max-width: 200px; /* Optional: limit width */
+}
+.card-list-container {
+    position: relative; /* Necessary for absolute positioning of buttons */
+    overflow: hidden; /* Hide overflow if needed */
+}
+
+.card-list {
+    display: flex;
+    margin-top: var(--spacing-2xl); /* Align items in a row */
+    overflow-x: auto; /* Enable horizontal scrolling */
+    padding: var(--spacing-md); /* Padding for the card list */
+    scroll-behavior: smooth; /* Smooth scrolling behavior */
+}
+
+.card-item {
+    cursor: pointer;
+    display: inline-block; /* Keeps items in a row */
+    background: #ffffff; /* Card background */
+    transition: var(--transition-normal);
+    border-radius: var(--border-radius-lg); /* Rounded corners */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+    max-width: var(--movie-item-max-width); /* Fixed width for each card */
+    height: 400px;
+    margin: var(--spacing-md);
+}
+.card-item:hover {
+    transform: scale(1.05);
+}
+
+.scroll-button {
+    position: absolute; /* Absolute positioning to overlap the card list */
+    top: 50%; /* Center vertically */
+    transform: translateY(-50%); /* Adjust to center */
+    background: var(--color-text-light); /* Blue background for the buttons */
+    opacity: 0.7;
+    color: var(--color-background); /* White text color */
+    border: none; /* No border */
+    border-radius: var(--border-radius-sm); /* Rounded corners */
+    padding: var(--spacing-lg); /* Padding for buttons */
+    cursor: pointer; /* Pointer cursor */
+    z-index: 10; /* Ensure it appears above other elements */
+}
+
+.scroll-button.left {
+    left: 10px; /* Positioning for the left button */
+}
+
+.scroll-button.right {
+    right: 10px; /* Positioning for the right button */
+}
+
+.card-title {
+    margin-left: 20px;
+}
+
+.scroll-button:hover {
+    background: #0056b3; /* Darker background on hover */
+}
+.view-all-button {
+    position: absolute; /* Fixed positioning for the button */
+    top: 10px; /* Space from the top */
+    right: 10px; /* Space from the right */
+    padding: 8px 16px; /* Button padding */
+    background-color: var(--color-primary); /* Button color */
+    color: white; /* Text color */
+    border: none; /* No border */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer cursor */
+    z-index: 10; /* Ensure it is on top */
+}
+.loading-spinner {
+    font-size: 2rem; /* Font size for the loading text */
+    text-align: center; /* Center the loading text */
+    margin-top: 20px; /* Add margin for spacing */
+    animation: pulse 1.5s infinite; /* Animate the loading text */
+}
+movie-detail-page {
+    font-family: Arial, sans-serif;
+    max-width: 65%;
+    margin: auto;
+}
+
+.header {
+    height: 55vh; /* Set to cover the top third of the page */
+    background-size: 100% 100%; /* Allow the background image to cover the area */
+    display: flex; /* Center content */
+    justify-content: center; /* Center title horizontally */
+    align-items: center; /* Center title vertically */
+    color: white; /* Text color for title */
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8); /* Slight shadow for better readability */
+}
+.gradient-overlay {
+    position: absolute;
+    top: 5;
+    left: 0;
+    width: 100%;
+    height: 55vh;
+
+    background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0) 0%,
+        rgba(0, 0, 0, 0.7) 100%
+    ); /* Gradient from transparent to dark */
+    /* Place the gradient overlay above the background image */
+}
+
+.movie-title {
+    font-size: 2rem; /* Size for the movie title */
+    margin: 0; /* Remove default margin */
+}
+
+.details {
+    padding: 20px; /* Padding for the details section */
 }
 
 /* Optional: Adjust appearance in mobile layout */
@@ -211,6 +334,18 @@
     .rating-filter {
         flex-direction: column; /* Stack label above select on small screens */
         align-items: flex-start; /* Align items to the start */
+    }
+    .view-all-button {
+        position: absolute; /* Fixed positioning for the button */
+        top: 10px; /* Space from the top */
+        right: 10px; /* Space from the right */
+        padding: 4px 12px; /* Button padding */
+        background-color: #007bff; /* Button color */
+        color: white; /* Text color */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor */
+        z-index: 10; /* Ensure it is on top */
     }
 
     .filter-label {
@@ -227,6 +362,39 @@
         margin-bottom: 20%;
         flex-wrap: wrap;
         gap: 40px;
+    }
+    .movie-item {
+        max-height: 25vh;
+    }
+
+    .card-item {
+        cursor: pointer;
+        display: inline-block; /* Keeps items in a row */
+        background: #ffffff; /* Card background */
+        transition: var(--transition-normal);
+        border-radius: 2px; /* Rounded corners */ /* Padding inside the card */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+        max-width: 105px; /* Fixed width for each card */
+        max-height: 22vh;
+        margin: 10px;
+    }
+    .movie-thumbnail {
+        width: 105px; /* Thumbnail size */
+        height: 140px; /* Standard height */
+        border-radius: var(--border-radius-sm); /* Slightly round corners */ /* Space between the image and details */
+    }
+    .card-title {
+        font-size: 10px;
+        margin-left: 5px;
+        max-width: 100px;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+    .card-list {
+        display: flex; /* Align items in a row */
+        height: 30%;
+        overflow-x: auto; /* Enable horizontal scrolling */ /* Padding for the card list */
+        scroll-behavior: smooth; /* Smooth scrolling behavior */
     }
 }
 /* Tablet and Desktop Styles */
@@ -259,17 +427,40 @@
         color: var(--color-error);
     }
     .movie-item {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        padding: 10px;
-        width: 40%;
-        transition: transform 0.3s;
+        display: inline-block; /* Keeps items in a row */
+        background: #ffffff; /* Card background */
+        border-radius: 8px; /* Rounded corners */ /* Padding inside the card */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+        max-width: 300px; /* Fixed width for each card */
+        margin: 10px;
     }
     .movie-list {
         margin-left: 9%;
+    }
+    .pagination {
+        display: flex;
+        justify-content: center; /* Center align the pagination controls */
+        position: fixed; /* Fix the position */
+        bottom: 0; /* Align to the bottom */
+        left: 0; /* Align to the left */
+        right: 0; /* Align to the right */
+        padding: 10px; /* Inner padding */
+        z-index: 900; /* Ensure it’s above other elements */
+    }
+
+    .pagination button {
+        padding: 8px 12px; /* Inner padding for buttons */
+        margin: 0 5px; /* Space between buttons */
+        border: 1px solid #007bff; /* Border color */
+        border-radius: 4px; /* Rounded corners */
+        background-color: #007bff; /* Button background color */
+        color: white; /* Button text color */
+        cursor: pointer; /* Pointer cursor for buttons */
+    }
+
+    .pagination button:disabled {
+        background-color: #ddd; /* Disabled button background */
+        cursor: not-allowed; /* Change cursor for disabled */
     }
 }
 @media (max-width: 768px) {
@@ -293,29 +484,6 @@
         min-height: 44px; /* Minimum touch target size */
         min-width: 44px;
         color: #333;
-    }
-}
-
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
-    :root {
-        --color-background: #1a1a1a;
-        --color-text: #ffffff;
-        --color-text-light: #cccccc;
-        --color-border: #404040;
-        --color-primary: #6ba7e8;
-        --shadow-focus: 0 0 0 3px rgba(107, 167, 232, 0.2);
-    }
-}
-
-/* High Contrast Mode */
-@media (forced-colors: active) {
-    .search-input {
-        border: var(--border-width-normal) solid ButtonBorder;
-    }
-
-    .search-input:focus {
-        outline: 2px solid ButtonText;
     }
 }
 @media (min-width: 769px) {

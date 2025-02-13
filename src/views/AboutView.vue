@@ -1,15 +1,16 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
-  </div>
+  <div class="app"><ShowDetail v-if="show != undefined" :movie="decodedElement!" /></div>
 </template>
+<script setup lang="ts">
+import ShowDetail from "@/components/ShowDetail.vue";
+import { computed, ref } from "vue";
 
-<style>
-@media (min-width: 1024px) {
-  .about {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-  }
-}
-</style>
+const decodedElement = ref(
+  computed(() => {
+    return JSON.parse(decodeURIComponent(props.show));
+  })
+);
+const props = defineProps<{
+  show: string;
+}>();
+</script>

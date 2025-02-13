@@ -1,28 +1,25 @@
 <template>
-  <div class="modal" v-if="isVisible">
-    <div class="modal-content">
-      <span class="close" @click="$emit('close')">&times;</span>
-      <h2>{{ movie.name }}</h2>
-      <img v-if="movie.image" :src="movie.image" alt="Movie Image" class="movie-image" />
+  <div class="movie-detail-page">
+    <div class="header" :style="{ backgroundImage: `url(${movie.image})` }">
+      <div class="gradient-overlay"></div>
+    </div>
+    <div class="details">
+      <h1>{{ movie.name }}</h1>
+      <h3>Summary:</h3>
+      <p>{{ movie.summary }}</p>
       <p><strong>Status:</strong> {{ movie.status }}</p>
       <p><strong>Premiered:</strong> {{ movie.premiered }}</p>
+      <p v-if="movie.ended != null"><strong>Ended:</strong> {{ movie.ended }}</p>
       <p><strong>Genres:</strong> {{ movie.genres.join(", ") }}</p>
       <p><strong>Rating:</strong> {{ movie.rating }}</p>
-      <p>{{ movie.summary }}</p>
     </div>
   </div>
 </template>
-
 <script setup lang="ts">
 import type { MovieItem } from "@/types/movieItem";
 import { defineProps } from "vue";
 
 defineProps<{
-  isVisible: boolean;
   movie: MovieItem;
-}>();
-
-defineEmits<{
-  (e: "close"): void;
 }>();
 </script>

@@ -1,46 +1,46 @@
 <script setup lang="ts">
 import { computed, onMounted, reactive, ref } from "vue";
-import { getShows } from "@/utils/composables/getShows";
+import { useDataStore } from "@/store/tvshowstore";
+import { storeToRefs } from "pinia";
 import MovieList from "../components/MovieList.vue";
 import SearchBar from "../components/SearchBar.vue";
 import Sidebar from "../components/SideBar.vue";
 import RatingSort from "@/components/RatingSort.vue";
 import PaginationComponent from "@/components/PaginationComponent.vue";
+import CardList from "@/components/CardList.vue";
 
+const store = useDataStore();
 const selectedGenre = ref<string[]>([]);
 const searchQuery = ref("");
 const currentPage = ref(1); // Track current page
 const itemsPerPage = ref(50);
 const handleSearch = (query: string) => {
-  console.log("Searching for:", query);
   searchQuery.value = query;
-  // Implement your search logic here
 };
-const { movies, error, loading, fetchShows } = getShows();
+const { shows, error, loading, links } = storeToRefs(store);
 const sortOrder = ref<"asc" | "desc">("asc");
 
 const handleClear = () => {
-  console.log("Search cleared");
   searchQuery.value = "";
   // Handle clear event
 };
 
 const filterByGenre = (genres: string[]) => {
-  console.log(genres);
   selectedGenre.value = genres;
 };
 const setSortOrder = (order: "asc" | "desc") => {
   sortOrder.value = order; // Update the selected rating based on the dropdown selection
 };
-console.log(movies.value);
+const getMoviesByGenre = (genre: string) => {
+  return shows.value.filter((movie) => movie.genres.includes(genre)).slice(0, 20);
+};
 const filteredMovies = reactive(
   computed(() => {
-    console.log(searchQuery.value.length);
-    return movies.value
+    return shows.value
       .filter((movie) => {
         const matchesGenre =
           selectedGenre.value.length === 0
-            ? movies.value
+            ? shows.value
             : movie.genres.some((genre) => selectedGenre.value.includes(genre));
         const matchesSearch = movie.name.toLowerCase().includes(searchQuery.value.toLowerCase());
         return matchesGenre && matchesSearch;
@@ -64,7 +64,6 @@ const paginatedMovies = ref(
       handlePageChange(1);
       return filteredMovies.value.slice(0, 50);
     }
-    console.log(filteredMovies.value.slice(start, end));
     return filteredMovies.value.slice(start, end); // Return only the movies for the current page
   })
 );
@@ -72,13 +71,18 @@ const handlePageChange = (pageNumber: number) => {
   currentPage.value = pageNumber;
 };
 onMounted(() => {
-  fetchShows();
+  store.fetchShows();
 });
 </script>
 
 <template>
   <div class="app">
-    <Sidebar @filter="filterByGenre" />
+    <Sidebar
+      :allGenres="links"
+      @filter="filterByGenre"
+      :selctedGenres="selectedGenre"
+      :key="selectedGenre.length"
+    />
     <div class="content">
       <SearchBar
         placeholder="Search Shows..."
@@ -87,13 +91,29 @@ onMounted(() => {
         @search="handleSearch"
         @clear="handleClear"
       />
-      <div>
+      <div v-if="loading" class="loading-spinner">Loading...</div>
+      <div v-if="error">{{ error }}</div>
+      <div v-if="!error || !loading">
         <!-- <h1>{{ selectedGenre ? selectedGenre : "Home" }}</h1> -->
-        <div v-if="loading">Loading movies...</div>
-        <div v-if="error">{{ error }}</div>
-        <div><RatingSort @update="setSortOrder" /></div>
-        <MovieList :items="paginatedMovies" />
+
+        <div><RatingSort v-if="selectedGenre.length > 0" @update="setSortOrder" /></div>
+        <div v-if="selectedGenre.length < 1 && searchQuery.length < 1">
+          <div v-for="genre in links" :key="genre.name" class="genre-section">
+            <h2>{{ genre.name }}</h2>
+            <CardList
+              :items="getMoviesByGenre(genre.name)"
+              :genre="genre.name"
+              @filter="filterByGenre"
+            />
+          </div>
+        </div>
+
+        <MovieList
+          v-if="selectedGenre.length > 0 || searchQuery.length > 0"
+          :items="paginatedMovies"
+        />
         <PaginationComponent
+          v-if="selectedGenre.length > 0"
           :currentPage="currentPage"
           :totalPages="totalPages"
           @pageChange="handlePageChange"
