@@ -1,6 +1,6 @@
 <template>
   <div class="card-list-container">
-    <button class="view-all-button" @click="updateSelectedGenres">View All{{ genre }}</button>
+    <button class="view-all-button" @click="updateSelectedGenres">All {{ genre }}</button>
     <button class="scroll-button left" @click="scrollLeft">❮</button>
     <div class="card-list" ref="cardList">
       <div class="card-item" v-for="item in items" :key="item.id">

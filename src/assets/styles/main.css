@@ -152,7 +152,7 @@
     background-color: var(white);
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
     max-width: 300px; /* Fixed width for each card */
-    height: 350px;
+    height: 400px;
     margin: 10px;
 }
 
@@ -236,7 +236,8 @@
 }
 
 .card-list {
-    display: flex; /* Align items in a row */
+    display: flex;
+    margin-top: 30px; /* Align items in a row */
     overflow-x: auto; /* Enable horizontal scrolling */
     padding: 10px; /* Padding for the card list */
     scroll-behavior: smooth; /* Smooth scrolling behavior */
@@ -250,7 +251,7 @@
     border-radius: 8px; /* Rounded corners */ /* Padding inside the card */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
     max-width: 300px; /* Fixed width for each card */
-    height: 300px;
+    height: 400px;
     margin: 10px;
 }
 .card-item:hover {
@@ -297,12 +298,30 @@
     cursor: pointer; /* Pointer cursor */
     z-index: 10; /* Ensure it is on top */
 }
+.loading-spinner {
+    font-size: 2rem; /* Font size for the loading text */
+    text-align: center; /* Center the loading text */
+    margin-top: 20px; /* Add margin for spacing */
+    animation: pulse 1.5s infinite; /* Animate the loading text */
+}
 
 /* Optional: Adjust appearance in mobile layout */
 @media (max-width: 600px) {
     .rating-filter {
         flex-direction: column; /* Stack label above select on small screens */
         align-items: flex-start; /* Align items to the start */
+    }
+    .view-all-button {
+        position: absolute; /* Fixed positioning for the button */
+        top: 10px; /* Space from the top */
+        right: 10px; /* Space from the right */
+        padding: 4px 12px; /* Button padding */
+        background-color: #007bff; /* Button color */
+        color: white; /* Text color */
+        border: none; /* No border */
+        border-radius: 5px; /* Rounded corners */
+        cursor: pointer; /* Pointer cursor */
+        z-index: 10; /* Ensure it is on top */
     }
 
     .filter-label {
@@ -319,6 +338,39 @@
         margin-bottom: 20%;
         flex-wrap: wrap;
         gap: 40px;
+    }
+    .movie-item {
+        max-height: 25vh;
+    }
+
+    .card-item {
+        cursor: pointer;
+        display: inline-block; /* Keeps items in a row */
+        background: #ffffff; /* Card background */
+        transition: var(--transition-normal);
+        border-radius: 2px; /* Rounded corners */ /* Padding inside the card */
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Shadow for 3D effect */
+        max-width: 105px; /* Fixed width for each card */
+        max-height: 22vh;
+        margin: 10px;
+    }
+    .movie-thumbnail {
+        width: 105px; /* Thumbnail size */
+        height: 140px; /* Standard height */
+        border-radius: var(--border-radius-sm); /* Slightly round corners */ /* Space between the image and details */
+    }
+    .card-title {
+        font-size: 10px;
+        margin-left: 5px;
+        max-width: 100px;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+    .card-list {
+        display: flex; /* Align items in a row */
+        height: 30%;
+        overflow-x: auto; /* Enable horizontal scrolling */ /* Padding for the card list */
+        scroll-behavior: smooth; /* Smooth scrolling behavior */
     }
 }
 /* Tablet and Desktop Styles */

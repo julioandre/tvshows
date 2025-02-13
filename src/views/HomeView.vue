@@ -103,9 +103,9 @@ onMounted(() => {
       />
       <div>
         <!-- <h1>{{ selectedGenre ? selectedGenre : "Home" }}</h1> -->
-        <div v-if="loading">Loading movies...</div>
+        <div v-if="loading" class="loading-spinner">Loading...</div>
         <div v-if="error">{{ error }}</div>
-        <div><RatingSort @update="setSortOrder" /></div>
+        <div><RatingSort v-if="selectedGenre.length > 0" @update="setSortOrder" /></div>
         <div v-if="selectedGenre.length < 1 && searchQuery.length < 1">
           <div v-for="genre in links" :key="genre.name" class="genre-section">
             <h2>{{ genre.name }}</h2>
@@ -123,6 +123,7 @@ onMounted(() => {
           :items="paginatedMovies"
         />
         <PaginationComponent
+          v-if="selectedGenre.length > 0"
           :currentPage="currentPage"
           :totalPages="totalPages"
           @pageChange="handlePageChange"

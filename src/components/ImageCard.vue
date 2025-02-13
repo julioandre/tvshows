@@ -1,12 +1,10 @@
 <template>
   <img :src="image" :alt="name" class="movie-thumbnail" />
   <div class="card-details">
-    <p>
-      <strong class="card-title">{{ name }}</strong>
+    <p class="card-title">
+      <strong>{{ name }}</strong>
     </p>
-    <p>
-      <strong v-if="rating" class="card-title">{{ rating }}</strong>
-    </p>
+    <strong v-if="rating" class="card-title">{{ rating }}</strong>
   </div>
 </template>
 <script setup lang="ts">
