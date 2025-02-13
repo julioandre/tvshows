@@ -3,7 +3,7 @@
     <button class="view-all-button" @click="updateSelectedGenres">All {{ genre }}</button>
     <button class="scroll-button left" @click="scrollLeft">❮</button>
     <div class="card-list" ref="cardList">
-      <div class="card-item" v-for="item in items" :key="item.id">
+      <div class="card-item" v-for="item in items" :key="item.id" @click="openPage(item)">
         <ImageCard :image="item.image" :name="item.name" />
       </div>
     </div>
@@ -15,6 +15,9 @@
 import type { MovieItem } from "@/types/movieItem";
 import { defineProps, ref } from "vue";
 import ImageCard from "./ImageCard.vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const props = defineProps<{
   items: MovieItem[];
@@ -47,5 +50,12 @@ const scrollRight = () => {
 };
 const updateSelectedGenres = () => {
   emit("filter", [props.genre]); // Emit the selected genre
+};
+const openPage = (movie: MovieItem) => {
+  const showString = encodeURIComponent(JSON.stringify(movie));
+  router.push({
+    name: "about",
+    params: { show: showString },
+  });
 };
 </script>

@@ -17,7 +17,6 @@ const itemsPerPage = ref(50);
 const handleSearch = (query: string) => {
   console.log("Searching for:", query);
   searchQuery.value = query;
-  // Implement your search logic here
 };
 const { shows, error, loading, links } = storeToRefs(store);
 const sortOrder = ref<"asc" | "desc">("asc");
@@ -115,7 +114,6 @@ onMounted(() => {
               :genre="genre.name"
               @filter="filterByGenre"
             />
-            <!-- Pass movies of this genre to CardList -->
           </div>
         </div>
 
