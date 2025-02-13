@@ -40,7 +40,7 @@ With the help of pinia and vitest I have created unit test for all the component
 ## Extras
 
 ### Pagination 
-I added a pagaination element to display the first 50 results based on filters and search. This is to give the website a more cleaner feel.
+I added a pagaination element to display the first 50 results based on filters and search. This is to give the website a more cleaner feel and not to overwhelm the uer with too many items on one page
 
 ### Debounced Search 
 I made use of debounce in my search functionality for a more intuitive design and faster search:
