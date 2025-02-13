@@ -93,7 +93,7 @@ onMounted(() => {
       />
       <div v-if="loading" class="loading-spinner">Loading...</div>
       <div v-if="error">{{ error }}</div>
-      <div v-if="!error || !loading">
+      <div v-if="error?.length > 0 || !loading">
         <!-- <h1>{{ selectedGenre ? selectedGenre : "Home" }}</h1> -->
 
         <div><RatingSort v-if="selectedGenre.length > 0" @update="setSortOrder" /></div>
