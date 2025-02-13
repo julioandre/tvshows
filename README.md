@@ -1,6 +1,6 @@
 # tvshows
 
-This is a VueJs frontend project that fetches a list of TV shows and then displays them on a dashboard for the user. These dashboard has a serch functionality and also a sort by rating functionality to sort by the shows rating.
+This is a VueJs frontend project that fetches a list of TV shows and then displays them on a dashboard for the user. This dashboard has a search functionality and also a sort by rating functionality to sort by the shows rating.
 Additiionaly it is able to filter based on the show genre.
 
 ## Development Decisions
