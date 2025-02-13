@@ -27,7 +27,7 @@ export const useDataStore = defineStore("shows", () => {
     loading.value = true;
     try {
       console.log("Fetching..");
-      const response = await axios.get<ShowItem[]>("https://api.tvmaze.com/shows/");
+      const response = await axios.get<ShowItem[]>("https://api.tvmaze.com/shows");
       shows.value = response.data.map((item: ShowItem) => ({
         id: item.id,
         name: item.name,

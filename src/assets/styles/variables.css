@@ -17,6 +17,10 @@
     --sidebar-transition: 0.3s ease;
     --sidebar-z-index: 1000;
 
+    /* Movie Item Properties */
+    --movie-item-max-width: 300px;
+    --movie-item-max-height: 300px;
+
     /*Image Properties*/
     --image-width: 300px;
     --image-height: 300px;

@@ -45,8 +45,7 @@ const updateSelectedGenres = () => {
 
 const { isMobile } = useBreakpoint();
 
-// Sample sidebar links
-
+//Keep the Sidebar expanded when on desktop
 const isExpanded = isMobile ? ref<boolean>(false) : ref<boolean>(true);
 
 const toggleSidebar = () => {
