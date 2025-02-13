@@ -1,5 +1,6 @@
 <template>
   <div class="movie-list">
+    <div v-if="props.items.length < 1"><h1>:( No Results to Display</h1></div>
     <div class="movie-item" v-for="item in props.items" :key="item.id" @click="openPage(item)">
       <ImageCard :image="item.image" :name="item.name" :rating="item.rating" />
     </div>
