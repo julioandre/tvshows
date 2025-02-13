@@ -21,15 +21,10 @@ For the list of Genres I had hardcoded list of genres, because looping through t
 
 I added pagination for when the shows listed were more than 50 per page;
 
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vite.dev/config/).
-
+## Versioning
+ Node: >= 18.4
+ NPM: >= 9.5
+ 
 ## Project Setup
 
 ```sh
