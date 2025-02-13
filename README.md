@@ -7,7 +7,7 @@ Additiionaly it is able to filter based on the show genre.
 
 ### TypeScript 
 
-I made use of Typescript in my project to reduce runtime errors by adding strong typing to  and static checking to my projects & to make the code easily readable.
+I made use of Typescript in my project to reduce runtime errors by adding strong typing to  and static checking to my projects.
 
 ### Pinia & Vitest 
 
