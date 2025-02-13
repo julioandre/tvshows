@@ -3,7 +3,7 @@
 </template>
 <script setup lang="ts">
 import ShowDetail from "@/components/ShowDetail.vue";
-import { computed, onMounted, ref } from "vue";
+import { computed, ref } from "vue";
 
 const decodedElement = ref(
   computed(() => {
@@ -13,8 +13,4 @@ const decodedElement = ref(
 const props = defineProps<{
   show: string;
 }>();
-
-onMounted(() => {
-  console.log(decodedElement.value);
-});
 </script>

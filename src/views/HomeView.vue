@@ -15,33 +15,27 @@ const searchQuery = ref("");
 const currentPage = ref(1); // Track current page
 const itemsPerPage = ref(50);
 const handleSearch = (query: string) => {
-  console.log("Searching for:", query);
   searchQuery.value = query;
 };
 const { shows, error, loading, links } = storeToRefs(store);
 const sortOrder = ref<"asc" | "desc">("asc");
 
 const handleClear = () => {
-  console.log("Search cleared");
   searchQuery.value = "";
   // Handle clear event
 };
 
 const filterByGenre = (genres: string[]) => {
-  console.log(genres);
   selectedGenre.value = genres;
 };
 const setSortOrder = (order: "asc" | "desc") => {
   sortOrder.value = order; // Update the selected rating based on the dropdown selection
 };
 const getMoviesByGenre = (genre: string) => {
-  console.log(genre);
   return shows.value.filter((movie) => movie.genres.includes(genre)).slice(0, 20);
 };
-console.log(shows.value);
 const filteredMovies = reactive(
   computed(() => {
-    console.log(selectedGenre.value.length);
     return shows.value
       .filter((movie) => {
         const matchesGenre =
@@ -70,7 +64,6 @@ const paginatedMovies = ref(
       handlePageChange(1);
       return filteredMovies.value.slice(0, 50);
     }
-    console.log(filteredMovies.value.slice(start, end));
     return filteredMovies.value.slice(start, end); // Return only the movies for the current page
   })
 );
@@ -79,8 +72,6 @@ const handlePageChange = (pageNumber: number) => {
 };
 onMounted(() => {
   store.fetchShows();
-  console.log(shows);
-  console.log(error.value?.length);
 });
 </script>
 

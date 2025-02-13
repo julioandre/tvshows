@@ -56,6 +56,5 @@ watch(selectedGenre, () => {
 });
 onMounted(() => {
   selectedGenre.value = props.selctedGenres;
-  console.log(selectedGenre.value);
 });
 </script>
