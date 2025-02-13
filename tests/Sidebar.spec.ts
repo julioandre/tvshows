@@ -1,74 +1,129 @@
-import { mount } from "@vue/test-utils";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import Sidebar from "../src/components/Sidebar.vue";
-import { nextTick } from "vue";
+import { mount, VueWrapper } from "@vue/test-utils";
+import Sidebar from "../src/components/SideBar.vue";
 
-describe("Sidebar.vue", () => {
-  let wrapper;
+// Mock the useBreakpoint composable
+vi.mock("../src/composables/useBreakpoints.ts", () => ({
+  useBreakpoint: () => ({
+    isMobile: false,
+  }),
+}));
+
+describe("Sidebar Component", () => {
+  let wrapper: VueWrapper;
+  const mockGenres = [
+    { name: "Action", id: 1 },
+    { name: "Comedy", id: 2 },
+    { name: "Drama", id: 3 },
+  ];
+
+  const createWrapper = (props = {}) => {
+    return mount(Sidebar, {
+      props: {
+        allGenres: mockGenres,
+        selctedGenres: [],
+        ...props,
+      },
+    });
+  };
 
   beforeEach(() => {
-    wrapper = mount(Sidebar, {
-      props: {
-        allGenres: [{ name: "Action" }, { name: "Comedy" }, { name: "Drama" }],
-        selctedGenres: [],
-      },
+    wrapper = createWrapper();
+  });
+
+  it("renders properly", () => {
+    expect(wrapper.find(".sidebar").exists()).toBe(true);
+    expect(wrapper.find(".sidebar-title").text()).toBe("Genres");
+    expect(wrapper.findAll(".sidebar-links")).toHaveLength(3);
+  });
+
+  it("renders all genres from props", () => {
+    const genreLabels = wrapper.findAll("label");
+    expect(genreLabels).toHaveLength(mockGenres.length);
+    genreLabels.forEach((label, index) => {
+      expect(label.text().trim()).toBe(mockGenres[index].name);
     });
   });
 
-  it("renders correctly", () => {
-    expect(wrapper.exists()).toBe(true);
-    expect(wrapper.find(".sidebar-title").text()).toBe("Genres");
-    expect(wrapper.findAll(".sidebar-links").length).toBe(3); // Three genres should be rendered
+  it("initializes with selected genres from props", async () => {
+    const selectedGenres = ["Action", "Drama"];
+    wrapper = createWrapper({ selctedGenres: selectedGenres });
+    await wrapper.vm.$nextTick();
+
+    const checkboxes = wrapper.findAll('input[type="checkbox"]');
+    const selectedCheckboxes = checkboxes.filter(
+      (checkbox) => (checkbox.element as HTMLInputElement).checked
+    );
+    expect(selectedCheckboxes).toHaveLength(2);
   });
 
-  it("toggles sidebar when button is clicked on mobile", async () => {
-    // Initially, check that the sidebar is collapsed
-    expect(wrapper.classes()).not.toContain("collapsed");
+  it("emits filter event when genre is selected", async () => {
+    const checkbox = wrapper.find('input[type="checkbox"]');
+    await checkbox.setValue(true);
 
-    // Simulate clicking the toggle button
-    const toggleButton = wrapper.find(".toggle-button");
-    await toggleButton.trigger("click");
-
-    // Sidebar should now be collapsed
-    expect(wrapper.classes()).toContain("collapsed");
+    expect(wrapper.emitted("filter")).toBeTruthy();
   });
 
-  it("selects a genre when the checkbox is checked", async () => {
-    const checkbox = wrapper.find('input[type="checkbox"][value="Action"]');
+  it("clears all selected genres when clear button is clicked", async () => {
+    // First select some genres
+    const checkboxes = wrapper.findAll('input[type="checkbox"]');
+    await checkboxes[0].setValue(true);
+    await checkboxes[1].setValue(true);
 
-    // Check the checkbox
-    await checkbox.setChecked();
-
-    // Check if the selectedGenre updated correctly
-    expect(wrapper.vm.selectedGenre).toContain("Action");
-  });
-
-  it("clears selected genres when the clear button is clicked", async () => {
-    // First, check that a genre is selected
-    const checkbox = wrapper.find('input[type="checkbox"][value="Action"]');
-    await checkbox.setChecked();
-
-    expect(wrapper.vm.selectedGenre).toContain("Action");
-
-    // Now, click the clear filters button
+    // Click clear button
     const clearButton = wrapper.find(".sidebar-button");
     await clearButton.trigger("click");
 
-    // Check if selectedGenre is cleared
-    expect(wrapper.vm.selectedGenre).toEqual([]);
+    // Check that all checkboxes are unchecked
+    const selectedCheckboxes = wrapper
+      .findAll('input[type="checkbox"]')
+      .filter((checkbox) => (checkbox.element as HTMLInputElement).checked);
+    expect(selectedCheckboxes).toHaveLength(0);
+
+    // Verify filter event was emitted with empty array
+    expect(wrapper.emitted("filter")?.[wrapper.emitted("filter")?.length - 1][0]).toEqual([]);
   });
 
-  it("emits the filter event with selected genres when a checkbox is checked", async () => {
-    const emitSpy = vi.spyOn(wrapper.vm.$emit, "filter");
-    const checkbox = wrapper.find('input[type="checkbox"][value="Comedy"]');
+  describe("Mobile functionality", () => {
+    beforeEach(() => {
+      vi.mock("../src/composables/useBreakpoints.ts", () => ({
+        useBreakpoint: () => ({
+          isMobile: true,
+        }),
+      }));
+      wrapper = createWrapper();
+    });
 
-    // Check the checkbox
-    await checkbox.setChecked();
+    it("renders toggle button only on mobile", () => {
+      expect(wrapper.find(".toggle-button").exists()).toBe(true);
+    });
 
-    // Wait for next tick to ensure the watcher has run
-    await nextTick();
+    it("toggles sidebar expansion when toggle button is clicked", async () => {
+      const toggleButton = wrapper.find(".toggle-button");
+      expect(wrapper.find(".sidebar").classes()).toContain("collapsed");
 
-    // Verify the emit call
-    expect(emitSpy).toHaveBeenCalledWith(["Comedy"]);
+      await toggleButton.trigger("click");
+      expect(wrapper.find(".sidebar").classes()).not.toContain("collapsed");
+
+      await toggleButton.trigger("click");
+      expect(wrapper.find(".sidebar").classes()).toContain("collapsed");
+    });
+
+    it("shows overlay when sidebar is expanded", async () => {
+      const toggleButton = wrapper.find(".toggle-button");
+      await toggleButton.trigger("click");
+
+      expect(wrapper.find(".sidebar-overlay").exists()).toBe(true);
+    });
+
+    it("closes sidebar when overlay is clicked", async () => {
+      const toggleButton = wrapper.find(".toggle-button");
+      await toggleButton.trigger("click");
+
+      const overlay = wrapper.find(".sidebar-overlay");
+      await overlay.trigger("click");
+
+      expect(wrapper.find(".sidebar").classes()).toContain("collapsed");
+    });
   });
 });

@@ -1,58 +1,153 @@
 import { mount } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import MovieList from "../src/components/MovieList.vue";
 import ImageCard from "../src/components/ImageCard.vue";
 import { createRouter, createWebHistory } from "vue-router";
-import { nextTick } from "vue";
-import { beforeEach, describe, expect, it } from "vitest";
 
-// Mock the router
+// Mock router
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: "/about",
+      path: "/about/:show",
       name: "about",
-      component: { template: "<div>About Page</div>" }, // Mock component
+      component: {}, // Mock component
     },
   ],
 });
 
-describe("MovieList.vue", () => {
+// Mock movie data
+const mockMovies = [
+  {
+    id: 1,
+    name: "Breaking Bad",
+    image: "breaking-bad.jpg",
+    rating: 9.5,
+  },
+  {
+    id: 2,
+    name: "Friends",
+    image: "friends.jpg",
+    rating: 8.8,
+  },
+];
+
+// Mock ImageCard component
+vi.mock("./ImageCard.vue", () => ({
+  default: {
+    name: "ImageCard",
+    props: ["image", "name", "rating"],
+    template: '<div data-testid="image-card">{{ name }}</div>',
+  },
+}));
+
+describe("MovieList Component", () => {
   let wrapper;
 
-  beforeEach(async () => {
-    // Mount the component with the mocked router
+  beforeEach(() => {
     wrapper = mount(MovieList, {
+      props: {
+        items: mockMovies,
+      },
       global: {
         plugins: [router],
-      },
-      props: {
-        items: [
-          { id: 1, image: "image1.jpg", name: "Movie 1", rating: 5 },
-          { id: 2, image: "image2.jpg", name: "Movie 2", rating: 4 },
-        ],
+        stubs: {
+          ImageCard: true,
+        },
       },
     });
-    await router.isReady(); // Wait for the router to be ready
   });
 
-  it("renders the list of movies correctly", () => {
-    const movieItems = wrapper.findAll(".movie-item");
-    expect(movieItems.length).toBe(2); // There should be 2 items
+  describe("Component Rendering", () => {
+    it("renders the component", () => {
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.find(".movie-list").exists()).toBe(true);
+    });
 
-    // Check if the ImageCard component is correctly rendered
-    expect(wrapper.findComponent(ImageCard).exists()).toBe(true);
+    it("renders correct number of movie items", () => {
+      const movieItems = wrapper.findAll(".movie-item");
+      expect(movieItems).toHaveLength(mockMovies.length);
+    });
+
+    it("renders ImageCard components with correct props", () => {
+      const imageCards = wrapper.findAllComponents(ImageCard);
+      expect(imageCards).toHaveLength(mockMovies.length);
+
+      imageCards.forEach((card, index) => {
+        expect(card.props()).toEqual({
+          image: mockMovies[index].image,
+          name: mockMovies[index].name,
+          rating: mockMovies[index].rating,
+        });
+      });
+    });
   });
 
-  it("navigates to the correct page on movie click", async () => {
-    const movieItem = wrapper.find(".movie-item:first-of-type");
-    await movieItem.trigger("click"); // Simulate a click
+  describe("Navigation", () => {
+    it("navigates to correct route when movie item is clicked", async () => {
+      const routerPushSpy = vi.spyOn(router, "push");
 
-    // Check the router's current route params after the click
-    await nextTick(); // Wait for the next DOM update cycle
+      await wrapper.findAll(".movie-item")[0].trigger("click");
 
-    expect(wrapper.vm.$route.params.show).toBe(
-      encodeURIComponent(JSON.stringify({ id: 1, image: "image1.jpg", name: "Movie 1", rating: 5 }))
-    ); // Check if parameters are correctly encoded
+      expect(routerPushSpy).toHaveBeenCalledWith({
+        name: "about",
+        params: {
+          show: encodeURIComponent(JSON.stringify(mockMovies[0])),
+        },
+      });
+    });
+
+    it("properly encodes movie data in URL", async () => {
+      const routerPushSpy = vi.spyOn(router, "push");
+
+      await wrapper.findAll(".movie-item")[0].trigger("click");
+
+      const expectedEncodedData = encodeURIComponent(JSON.stringify(mockMovies[0]));
+      expect(routerPushSpy).toHaveBeenCalledWith(
+        expect.objectContaining({
+          params: { show: expectedEncodedData },
+        })
+      );
+    });
+  });
+
+  describe("Props Handling", () => {
+    it("accepts items prop as array", () => {
+      expect(wrapper.props("items")).toEqual(mockMovies);
+    });
+
+    it("updates when items prop changes", async () => {
+      const newMovies = [mockMovies[0]];
+      await wrapper.setProps({ items: newMovies });
+
+      const movieItems = wrapper.findAll(".movie-item");
+      expect(movieItems).toHaveLength(1);
+    });
+  });
+
+  describe("Error Handling", () => {
+    it("handles empty items array", async () => {
+      await wrapper.setProps({ items: [] });
+      expect(wrapper.findAll(".movie-item")).toHaveLength(0);
+    });
+
+    it("handles items with missing properties", async () => {
+      const incompleteMovie = [{ id: 1, name: "Test Movie" }];
+      await wrapper.setProps({ items: incompleteMovie });
+
+      const imageCards = wrapper.findAllComponents(ImageCard);
+      expect(imageCards[0].props().image).toBeUndefined();
+      expect(imageCards[0].props().rating).toBeUndefined();
+    });
+  });
+
+  describe("Component Events", () => {
+    it("triggers click event on movie item", async () => {
+      const movieItem = wrapper.find(".movie-item");
+      await movieItem.trigger("click");
+
+      // Verify router push was called
+      expect(router.push).toHaveBeenCalled();
+    });
   });
 });

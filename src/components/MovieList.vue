@@ -26,5 +26,4 @@ const openPage = (movie: MovieItem) => {
     params: { show: showString },
   });
 };
-// Function to close the modal
 </script>

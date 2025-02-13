@@ -4,7 +4,7 @@
     <p class="card-title">
       <strong>{{ name }}</strong>
     </p>
-    <strong v-if="rating" class="card-title">{{ rating }}</strong>
+    <strong v-if="rating" class="card-title-rating">{{ rating }}</strong>
   </div>
 </template>
 <script setup lang="ts">

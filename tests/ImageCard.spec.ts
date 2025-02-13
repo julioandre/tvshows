@@ -22,7 +22,7 @@ describe("ImageCard.vue", () => {
     expect(title).toBe("Inception");
 
     // Check that the rating is displayed
-    expect(wrapper.findAll(".card-title strong")[1].text()).toBe("8.8");
+    expect(wrapper.find(".card-title-rating").text()).toBe("8.8");
   });
 
   it("renders correctly without rating prop", () => {

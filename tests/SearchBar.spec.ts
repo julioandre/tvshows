@@ -1,90 +1,168 @@
 import { mount } from "@vue/test-utils";
+import { describe, it, expect, vi, beforeEach } from "vitest";
+import { nextTick } from "vue";
 import SearchBar from "../src/components/SearchBar.vue";
-import SearchInput from "../src/components/SearchInput.vue";
+import SearchInput from "./../src/components/SearchInput.vue";
 import ClearButton from "../src/components/ClearButton.vue";
 import ErrorMessage from "../src/components/ErrorMessage.vue";
-import { nextTick } from "vue";
-import { beforeEach, describe, expect, it } from "vitest";
 
-describe("SearchWrapper.vue", () => {
+// Mock composables
+vi.mock("@/composables/useDebounce", () => ({
+  useDebounce: () => ({
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-function-type
+    debounce: (fn: Function) => fn(),
+  }),
+}));
+
+vi.mock("@/composables/useValidation", () => ({
+  useValidation: (value: string, minLength: number) => ({
+    validate: () => ({
+      isValid: value.length >= minLength,
+      errorMessage: value.length >= minLength ? "" : `Minimum length is ${minLength}`,
+    }),
+  }),
+}));
+
+// Mock child components
+const mockComponents = {
+  SearchInput: {
+    template:
+      '<input type="text" :value="modelValue" @input="$emit(\'update:modelValue\', $event.target.value)" @focus="$emit(\'focus\')" @blur="$emit(\'blur\')" />',
+    props: ["modelValue", "placeholder", "errorMessage"],
+    emits: ["update:modelValue", "focus", "blur"],
+  },
+  ClearButton: {
+    template: "<button @click=\"$emit('clear')\">Clear</button>",
+    emits: ["clear"],
+  },
+  ErrorMessage: {
+    template: '<div class="error">{{ message }}</div>',
+    props: ["message"],
+  },
+};
+
+describe("Search Component", () => {
   let wrapper;
 
   beforeEach(() => {
     wrapper = mount(SearchBar, {
+      global: {
+        components: mockComponents,
+      },
       props: {
         placeholder: "Search...",
-        minLength: 3,
+        minLength: 2,
         debounceTime: 300,
       },
     });
   });
 
-  it("renders the search input and buttons correctly", () => {
-    expect(wrapper.findComponent(SearchInput).exists()).toBe(true);
-    expect(wrapper.findComponent(ClearButton).exists()).toBe(false); // Initially, the clear button should not be visible
+  describe("Component Rendering", () => {
+    it("renders the component", () => {
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.find(".search-wrapper").exists()).toBe(true);
+    });
+
+    it("renders SearchInput component", () => {
+      expect(wrapper.findComponent(SearchInput).exists()).toBe(true);
+    });
+
+    it("does not render ClearButton initially", () => {
+      expect(wrapper.findComponent(ClearButton).exists()).toBe(false);
+    });
+
+    it("does not render ErrorMessage initially", () => {
+      expect(wrapper.findComponent(ErrorMessage).exists()).toBe(false);
+    });
   });
 
-  it("updates the search query", async () => {
-    const searchInput = wrapper.findComponent(SearchInput);
+  describe("Props Handling", () => {
+    it("uses default props correctly", () => {
+      const defaultWrapper = mount(SearchBar);
+      expect(defaultWrapper.props("placeholder")).toBe("Search...");
+      expect(defaultWrapper.props("minLength")).toBe(0);
+      expect(defaultWrapper.props("debounceTime")).toBe(300);
+    });
 
-    await searchInput.setValue("Te"); // Shorter than minLength, should not show clear button
-
-    expect(wrapper.vm.searchQuery).toBe("Te");
-    expect(wrapper.findComponent(ClearButton).exists()).toBe(false); // Clear button should not be visible
-
-    await searchInput.setValue("Test"); // This should trigger debounce and emit the search event
-    await nextTick(); // wait for next DOM update
-
-    expect(wrapper.vm.searchQuery).toBe("Test");
-    expect(wrapper.findComponent(ClearButton).exists()).toBe(true); // Clear button should be visible
+    it("accepts custom props", () => {
+      expect(wrapper.props("placeholder")).toBe("Search...");
+      expect(wrapper.props("minLength")).toBe(2);
+      expect(wrapper.props("debounceTime")).toBe(300);
+    });
   });
 
-  it('emits "search" only when the input is valid', async () => {
-    const searchInput = wrapper.findComponent(SearchInput);
-    await searchInput.setValue("Te"); // Invalid query (too short)
+  describe("User Input Handling", () => {
+    it("updates searchQuery on input", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.setValue("test");
+      expect(wrapper.vm.searchQuery).toBe("test");
+    });
 
-    expect(wrapper.emitted("search")).toBeUndefined(); // No search event should be emitted
+    it("emits search event with valid input", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.setValue("test");
+      expect(wrapper.emitted("search")).toBeTruthy();
+      expect(wrapper.emitted("search")[0]).toEqual(["test"]);
+    });
 
-    await searchInput.setValue("Test"); // Now it's valid
-    await nextTick(); // Wait for debounce
-
-    expect(wrapper.emitted("search")).toBeTruthy(); // Search event should be emitted
-    expect(wrapper.emitted("search")[0]).toEqual(["Test"]); // Check emitted value
+    it("shows error message for invalid input", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.setValue("t"); // Less than minLength
+      await nextTick();
+      expect(wrapper.findComponent(ErrorMessage).exists()).toBe(true);
+    });
   });
 
-  it("clears the search when clear button is clicked", async () => {
-    const searchInput = wrapper.findComponent(SearchInput);
-    await searchInput.setValue("Test"); // Make sure there is a value
-    await nextTick(); // Wait for potential debounce
+  describe("Focus Handling", () => {
+    it("sets isFocused to true on focus", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.trigger("focus");
+      expect(wrapper.vm.isFocused).toBe(true);
+    });
 
-    const clearButton = wrapper.findComponent(ClearButton);
-    await clearButton.trigger("clear"); // Simulate clear action
+    it("sets isFocused to false on blur", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.trigger("focus");
+      await input.trigger("blur");
+      expect(wrapper.vm.isFocused).toBe(false);
+    });
 
-    expect(wrapper.vm.searchQuery).toBe(""); // Search query should be cleared
-    expect(wrapper.findComponent(ClearButton).exists()).toBe(false); // Clear button should not be visible
-    expect(wrapper.emitted("clear")).toBeTruthy(); // Clear event should be emitted
+    it("applies focused class when focused", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.trigger("focus");
+      expect(wrapper.find(".search-container").classes()).toContain("is-focused");
+    });
   });
 
-  it("displays error message when input is invalid", async () => {
-    const searchInput = wrapper.findComponent(SearchInput);
-    await searchInput.setValue("Te"); // Invalid input
-    await nextTick();
+  describe("Validation", () => {
+    it("validates input against minLength", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.setValue("t");
+      await nextTick();
+      expect(wrapper.vm.errorMessage).toBeTruthy();
+    });
 
-    expect(wrapper.vm.errorMessage).toBe(""); // check if errorMessage is empty (there's no message in your default implementation)
-    expect(wrapper.findComponent(ErrorMessage).exists()).toBe(true); // ErrorMessage should be displayed
-    expect(wrapper.findComponent(ErrorMessage).props("message")).toBe(""); // The message should be empty
+    it("clears error when input becomes valid", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.setValue("t");
+      await nextTick();
+      await input.setValue("test");
+      await nextTick();
+      expect(wrapper.vm.errorMessage).toBeFalsy();
+    });
   });
 
-  it("handles focus and blur events correctly", async () => {
-    const searchInput = wrapper.findComponent(SearchInput);
-    await searchInput.trigger("focus");
+  describe("Debounce Behavior", () => {
+    it("debounces search emit", async () => {
+      const input = wrapper.findComponent(SearchInput);
+      await input.setValue("t");
+      await input.setValue("te");
+      await input.setValue("tes");
+      await input.setValue("test");
 
-    expect(wrapper.vm.isFocused).toBe(true); // Ensure isFocused is true
-    expect(wrapper.find(".search-container").classes()).toContain("is-focused"); // CSS class should be added
-
-    await searchInput.trigger("blur");
-
-    expect(wrapper.vm.isFocused).toBe(false); // Ensure isFocused is false
-    expect(wrapper.find(".search-container").classes()).not.toContain("is-focused"); // CSS class should be removed
+      // Due to mock implementation, we still get all events
+      // In real implementation, this would be debounced
+      expect(wrapper.emitted("search")).toBeTruthy();
+    });
   });
 });

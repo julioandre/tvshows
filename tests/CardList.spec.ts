@@ -1,126 +1,174 @@
-import { MovieItem } from "./../src/types/movieItem";
 import { mount } from "@vue/test-utils";
-import { describe, it, expect, beforeEach, vi } from "vitest";
+import { describe, it, expect, vi, beforeEach } from "vitest";
 import CardList from "../src/components/CardList.vue";
 import ImageCard from "../src/components/ImageCard.vue";
+import { createRouter, createWebHistory } from "vue-router";
 
-describe("CardListContainer.vue", () => {
+// Mock router
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: "/about/:show",
+      name: "about",
+      component: {}, // Mock component
+    },
+  ],
+});
+
+// Mock data
+const mockItems = [
+  {
+    id: 1,
+    name: "Breaking Bad",
+    image: "breaking-bad.jpg",
+    genres: ["Drama"],
+  },
+  {
+    id: 2,
+    name: "Friends",
+    image: "friends.jpg",
+    genres: ["Comedy"],
+  },
+];
+
+// Mock ImageCard component
+vi.mock("./ImageCard.vue", () => ({
+  default: {
+    name: "ImageCard",
+    props: ["image", "name"],
+    template: '<div data-testid="image-card">{{ name }}</div>',
+  },
+}));
+
+describe("CardList Component", () => {
   let wrapper;
-  const items: MovieItem[] = [
-    {
-      id: 1,
-      name: "The Great Adventure",
-      summary: "An epic tale of adventure and discovery across fantastical lands.",
-      image: "http://example.com/image1.jpg",
-      status: "Running",
-      premiered: "2021-09-01",
-      genres: ["Adventure", "Fantasy"],
-      rating: 8.5,
-      ended: null,
-      network: {
-        id: 101,
-        name: "Adventure Network",
-        country: {
-          name: "USA",
-          code: "US",
-          timezone: "America/New_York",
-        },
-        officialSite: "http://example.com/adventure-network",
-      },
-    },
-    {
-      id: 2,
-      name: "Mystery of the Ages",
-      summary: "A gripping mystery that unfolds through time and space.",
-      image: "http://example.com/image2.jpg",
-      status: "Ended",
-      premiered: "2019-06-15",
-      genres: ["Mystery", "Drama"],
-      rating: 9.0,
-      ended: "2022-03-12",
-      network: {
-        id: 102,
-        name: "Drama Channel",
-        country: {
-          name: "UK",
-          code: "GB",
-          timezone: "Europe/London",
-        },
-        officialSite: "http://example.com/drama-channel",
-      },
-    },
-    {
-      id: 3,
-      name: "Sci-Fi Chronicles",
-      summary: "An exploration of futuristic worlds and the impact of technology.",
-      image: "http://example.com/image3.jpg",
-      status: "Running",
-      premiered: "2020-11-20",
-      genres: ["Science Fiction", "Thriller"],
-      rating: 8.8,
-      ended: null,
-      network: {
-        id: 103,
-        name: "Sci-Fi Network",
-        country: {
-          name: "Canada",
-          code: "CA",
-          timezone: "America/Toronto",
-        },
-        officialSite: "http://example.com/sci-fi-network",
-      },
-    },
-  ];
-  const genre = "Action";
 
   beforeEach(() => {
     wrapper = mount(CardList, {
       props: {
-        items,
-        genre,
+        items: mockItems,
+        genre: "Drama",
       },
       global: {
+        plugins: [router],
         stubs: {
-          ImageCard,
+          ImageCard: true,
         },
       },
     });
   });
 
-  it("renders the correct number of items", () => {
-    const cardItems = wrapper.findAll(".card-item");
-    expect(cardItems.length).toBe(items.length);
+  describe("Component Rendering", () => {
+    it("renders correctly with props", () => {
+      expect(wrapper.exists()).toBe(true);
+      expect(wrapper.find(".card-list-container").exists()).toBe(true);
+      expect(wrapper.find(".view-all-button").exists()).toBe(true);
+      expect(wrapper.findAll(".card-item")).toHaveLength(mockItems.length);
+    });
+
+    it("displays correct genre in view all button", () => {
+      expect(wrapper.find(".view-all-button").text()).toBe("All Drama");
+    });
+
+    it("renders scroll buttons", () => {
+      expect(wrapper.find(".scroll-button.left").exists()).toBe(true);
+      expect(wrapper.find(".scroll-button.right").exists()).toBe(true);
+    });
+
+    it("renders ImageCard components for each item", () => {
+      const imageCards = wrapper.findAllComponents({ name: "ImageCard" });
+      expect(imageCards).toHaveLength(mockItems.length);
+    });
   });
 
-  it("calls openPage when a card is clicked", async () => {
-    const openPageMock = vi.spyOn(wrapper.vm, "openPage");
-    const cardItem = wrapper.find(".card-item");
-    await cardItem.trigger("click");
+  describe("Event Handling", () => {
+    it("emits filter event when view all button is clicked", async () => {
+      await wrapper.find(".view-all-button").trigger("click");
+      expect(wrapper.emitted("filter")).toBeTruthy();
+      expect(wrapper.emitted("filter")[0]).toEqual([["Drama"]]);
+    });
 
-    expect(openPageMock).toHaveBeenCalledWith(items[0]); // Ensure the right item was clicked
+    it("calls scrollLeft when left scroll button is clicked", async () => {
+      const scrollBySpy = vi.fn();
+      const mockRef = {
+        value: {
+          scrollBy: scrollBySpy,
+        },
+      };
+      wrapper.vm.cardList = mockRef.value;
+
+      await wrapper.find(".scroll-button.left").trigger("click");
+      expect(scrollBySpy).toHaveBeenCalledWith({
+        left: -200,
+        behavior: "smooth",
+      });
+    });
+
+    it("calls scrollRight when right scroll button is clicked", async () => {
+      const scrollBySpy = vi.fn();
+      const mockRef = {
+        value: {
+          scrollBy: scrollBySpy,
+        },
+      };
+      wrapper.vm.cardList = mockRef.value;
+
+      await wrapper.find(".scroll-button.right").trigger("click");
+      expect(scrollBySpy).toHaveBeenCalledWith({
+        left: 200,
+        behavior: "smooth",
+      });
+    });
   });
 
-  it("scrolls left when left button is clicked", async () => {
-    const scrollLeftMock = vi.spyOn(wrapper.vm, "scrollLeft");
-    const leftButton = wrapper.find(".scroll-button.left");
-    await leftButton.trigger("click");
+  describe("Navigation", () => {
+    it("navigates to correct route when card is clicked", async () => {
+      const routerPushSpy = vi.spyOn(router, "push");
 
-    expect(scrollLeftMock).toHaveBeenCalled(); // Check if scrollLeft was called
+      await wrapper.findAll(".card-item")[0].trigger("click");
+
+      expect(routerPushSpy).toHaveBeenCalledWith({
+        name: "about",
+        params: {
+          show: encodeURIComponent(JSON.stringify(mockItems[0])),
+        },
+      });
+    });
   });
 
-  it("scrolls right when right button is clicked", async () => {
-    const scrollRightMock = vi.spyOn(wrapper.vm, "scrollRight");
-    const rightButton = wrapper.find(".scroll-button.right");
-    await rightButton.trigger("click");
+  describe("Props Validation", () => {
+    it("accepts items prop as array", () => {
+      expect(wrapper.props("items")).toEqual(mockItems);
+    });
 
-    expect(scrollRightMock).toHaveBeenCalled(); // Check if scrollRight was called
+    it("accepts genre prop as string", () => {
+      expect(wrapper.props("genre")).toBe("Drama");
+    });
+
+    it("updates when props change", async () => {
+      await wrapper.setProps({
+        genre: "Comedy",
+        items: [mockItems[1]],
+      });
+
+      expect(wrapper.find(".view-all-button").text()).toBe("All Comedy");
+      expect(wrapper.findAll(".card-item")).toHaveLength(1);
+    });
   });
 
-  it("emits the filter event with the correct genre when the view-all button is clicked", async () => {
-    const filterEmitSpy = vi.spyOn(wrapper.vm.$emit, "filter");
-    const viewAllButton = wrapper.find(".view-all-button");
-    await viewAllButton.trigger("click");
+  describe("Error Handling", () => {
+    it("handles empty items array", async () => {
+      await wrapper.setProps({ items: [] });
+      expect(wrapper.findAll(".card-item")).toHaveLength(0);
+    });
 
-    expect(filterEmitSpy).toHaveBeenCalledWith([genre]); // Verify the emitted filter event
+    it("handles undefined cardList ref when scrolling", async () => {
+      wrapper.vm.cardList = null;
+
+      // These should not throw errors
+      await wrapper.find(".scroll-button.left").trigger("click");
+      await wrapper.find(".scroll-button.right").trigger("click");
+    });
   });
 });
