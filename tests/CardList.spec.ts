@@ -1,9 +1,8 @@
 import { MovieItem } from "./../src/types/movieItem";
-// tests/unit/CardListContainer.spec.ts
 import { mount } from "@vue/test-utils";
 import { describe, it, expect, beforeEach, vi } from "vitest";
 import CardList from "../src/components/CardList.vue";
-import ImageCard from "../src/components/ImageCard.vue"; // Adjust the path as necessary
+import ImageCard from "../src/components/ImageCard.vue";
 
 describe("CardListContainer.vue", () => {
   let wrapper;

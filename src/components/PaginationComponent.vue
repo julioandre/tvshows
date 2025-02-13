@@ -14,7 +14,7 @@ import { defineProps } from "vue";
 const props = defineProps<{
   currentPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
+  onPageChange?: (page: number) => void;
 }>();
 
 const prevPage = () => {

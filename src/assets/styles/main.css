@@ -277,7 +277,7 @@
     top: 10px; /* Space from the top */
     right: 10px; /* Space from the right */
     padding: 8px 16px; /* Button padding */
-    background-color: var(--color-background); /* Button color */
+    background-color: var(--color-primary); /* Button color */
     color: white; /* Text color */
     border: none; /* No border */
     border-radius: 5px; /* Rounded corners */
