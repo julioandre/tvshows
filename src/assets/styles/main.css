@@ -293,14 +293,14 @@
     margin-top: 20px; /* Add margin for spacing */
     animation: pulse 1.5s infinite; /* Animate the loading text */
 }
-movie-detail-page {
+.movie-detail-page {
     font-family: Arial, sans-serif;
     max-width: 65%;
     margin: auto;
 }
 
 .header {
-    height: 55vh; /* Set to cover the top third of the page */
+    height: 70vh; /* Set to cover the top third of the page */
     background-size: 100% 100%; /* Allow the background image to cover the area */
     display: flex; /* Center content */
     justify-content: center; /* Center title horizontally */
@@ -313,7 +313,7 @@ movie-detail-page {
     top: 5;
     left: 0;
     width: 100%;
-    height: 55vh;
+    height: 70vh;
 
     background: linear-gradient(
         to bottom,

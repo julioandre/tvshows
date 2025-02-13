@@ -23,3 +23,20 @@ defineProps<{
   movie: MovieItem;
 }>();
 </script>
+<style scoped>
+.animated-container {
+  overflow: hidden;
+  padding: 10px;
+}
+
+.animated-text {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease-out;
+}
+
+.animated-text.animate {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
